@@ -21,7 +21,7 @@
   --mono:'SF Mono','Roboto Mono','Consolas',monospace;
 }
 body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg3);min-height:100vh}
-.header{background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.header{background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200}
 .logo{font-size:15px;font-weight:500;display:flex;align-items:center;gap:8px}
 .logo-dot{width:8px;height:8px;background:var(--teal);border-radius:50%}
 .header-right{font-size:12px;color:var(--text2)}
@@ -49,6 +49,20 @@ input,select{padding:8px 10px;border:0.5px solid var(--border);border-radius:var
 input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(55,138,221,.12)}
 input::placeholder{color:var(--text3)}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+
+/* ── AUTOCOMPLETE ─────────────────────────────────────────────────────────── */
+.ac-wrap{position:relative}
+.ac-drop{position:absolute;top:calc(100% + 2px);left:0;right:0;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);z-index:150;max-height:230px;overflow-y:auto;display:none;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
+.ac-item{padding:8px 12px;font-size:13px;cursor:pointer;border-bottom:0.5px solid var(--border2);display:flex;align-items:center;gap:8px}
+.ac-item:last-child{border-bottom:none}
+.ac-item:hover{background:var(--bg2)}
+.ac-dot-route{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0}
+.ac-dot-city{width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.ac-prov{font-size:11px;color:var(--text3);margin-left:auto}
+.ac-sep{padding:4px 12px;font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text3);background:var(--bg2);letter-spacing:.06em;border-bottom:0.5px solid var(--border2)}
+.ac-empty{padding:10px 12px;font-size:13px;color:var(--text3);font-style:italic}
+/* ─────────────────────────────────────────────────────────────────────────── */
+
 .valor-card{background:var(--bg2);border-radius:var(--rl);padding:1.25rem 1.5rem;margin:1.25rem 0;border:0.5px solid var(--border)}
 .valor-num{font-size:32px;font-weight:500;font-family:var(--mono);margin:4px 0 12px}
 .valor-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding-top:12px;border-top:0.5px solid var(--border2)}
@@ -92,7 +106,6 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .config-banner{background:var(--amber-bg);border:0.5px solid #FAC775;border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:13px;color:var(--amber-text)}
 .config-banner strong{display:block;margin-bottom:4px;font-size:14px}
-.divider{height:0.5px;background:var(--border2);margin:1.5rem 0}
 .hint{font-size:12px;color:var(--text2);margin-top:6px}
 .tar-sections{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 .tar-sec{border:0.5px solid var(--border);border-radius:var(--rl);padding:1.25rem}
@@ -128,14 +141,36 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
     <div class="form-sec">
       <div class="sec-title">Cliente y ruta</div>
       <div class="fg">
-        <div class="field"><label>Cliente</label>
-          <select id="v-cli" onchange="updOpts();calcValor()"><option value="">— Seleccionar —</option></select></div>
-        <div class="field"><label>Tipo de vehículo</label>
-          <select id="v-veh" onchange="calcValor()"><option value="">— Seleccionar —</option></select></div>
-        <div class="field"><label>Origen</label>
-          <select id="v-ori" onchange="calcValor()"><option value="">— Seleccionar —</option></select></div>
-        <div class="field"><label>Destino</label>
-          <select id="v-dst" onchange="calcValor()"><option value="">— Seleccionar —</option></select></div>
+        <div class="field">
+          <label>Cliente</label>
+          <select id="v-cli" onchange="updOpts();calcValor()"><option value="">— Seleccionar —</option></select>
+        </div>
+        <div class="field">
+          <label>Tipo de vehículo</label>
+          <select id="v-veh" onchange="calcValor()"><option value="">— Seleccionar —</option></select>
+        </div>
+        <div class="field">
+          <label>Origen</label>
+          <div class="ac-wrap">
+            <input type="text" id="v-ori" placeholder="Escribí ciudad o punto de origen..."
+              autocomplete="off"
+              oninput="onCityInput(this,'ori')"
+              onblur="setTimeout(()=>hideAc('ori'),200)"
+              onfocus="onCityInput(this,'ori')">
+            <div class="ac-drop" id="ac-ori"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Destino</label>
+          <div class="ac-wrap">
+            <input type="text" id="v-dst" placeholder="Escribí ciudad o punto de destino..."
+              autocomplete="off"
+              oninput="onCityInput(this,'dst')"
+              onblur="setTimeout(()=>hideAc('dst'),200)"
+              onfocus="onCityInput(this,'dst')">
+            <div class="ac-drop" id="ac-dst"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="form-sec">
@@ -182,7 +217,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
 
   <!-- ═══ HISTORIAL ══════════════════════════════════════════════════════════ -->
   <div id="panel-historial" class="panel">
-    <div class="stats" id="hist-stats">
+    <div class="stats">
       <div class="stat"><div class="stat-val" id="hs-n">—</div><div class="stat-lbl">Total viajes</div></div>
       <div class="stat"><div class="stat-val sv-blue" id="hs-fac">—</div><div class="stat-lbl">Total facturado</div></div>
       <div class="stat"><div class="stat-val sv-red" id="hs-cost">—</div><div class="stat-lbl">Costo fleteros</div></div>
@@ -231,9 +266,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
           </select></div>
         <div class="field"><label>Mes</label>
           <input type="month" id="lf-mes"></div>
-        <div>
-          <button class="btn btn-primary" onclick="generarLiq()">Ver liquidación</button>
-        </div>
+        <div><button class="btn btn-primary" onclick="generarLiq()">Ver liquidación</button></div>
       </div>
       <div class="liq-total" id="liq-total" style="display:none">
         <div class="liq-tot-item"><div class="liq-tot-val" id="lt-n">0</div><div class="liq-tot-lbl">Viajes</div></div>
@@ -249,7 +282,6 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
   <div id="panel-tarifas" class="panel">
     <div id="alert-tarifas"></div>
     <div class="tar-sections">
-      <!-- Tarifas clientes -->
       <div class="tar-sec">
         <div class="tar-sec-title">Tarifas — lo que cobramos a clientes</div>
         <div id="ua-cli" class="upload-zone" onclick="document.getElementById('csv-cli').click()">
@@ -268,7 +300,6 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
           <div class="stat"><div class="stat-val sv-amber" id="ts-alerta">—</div><div class="stat-lbl">Por vencer/vencidas</div></div>
         </div>
       </div>
-      <!-- Tarifas fleteros -->
       <div class="tar-sec">
         <div class="tar-sec-title">Tarifas — lo que pagamos a fleteros</div>
         <div id="ua-fle" class="upload-zone" onclick="document.getElementById('csv-fle').click()">
@@ -288,7 +319,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
         </div>
       </div>
     </div>
-    <p class="hint" style="margin-top:10px">Las tarifas vencidas no se aplican al calcular nuevos viajes. Actualizá el CSV para renovarlas.</p>
+    <p class="hint" style="margin-top:10px">Las tarifas vencidas no se aplican al calcular nuevos viajes.</p>
   </div>
 </main>
 
@@ -296,13 +327,15 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
 // ════════════════════════════════════════════════════════════════════════════
 //  CONFIGURACIÓN
 // ════════════════════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbzCzRIE8oZfzmaC_SvoUKO3YZ2_uqAZ3rKspjg5NavpIOevtOVR3Mi0MfSlgNg3dYoK/exec';
+const API_URL        = 'https://script.google.com/macros/s/AKfycbzCzRIE8oZfzmaC_SvoUKO3YZ2_uqAZ3rKspjg5NavpIOevtOVR3Mi0MfSlgNg3dYoK/exec';
+const GEOREF_URL     = 'https://apis.datos.gob.ar/georef/api/localidades';
 const FLETERO_CLIENTS = ['Femsa','Alpla','Syphon','Andina'];
 
 // ════════════════════════════════════════════════════════════════════════════
 //  ESTADO
 // ════════════════════════════════════════════════════════════════════════════
-let tarifas = [], tarifasFle = [], viajes = [], viajesLoaded = false;
+let tarifas=[], tarifasFle=[], viajes=[], viajesLoaded=false;
+let acTimers={}, acCache={};
 
 // ════════════════════════════════════════════════════════════════════════════
 //  UTILS
@@ -312,24 +345,19 @@ const today = () => new Date().toISOString().split('T')[0];
 const todayMonth = () => today().slice(0,7);
 const daysTo = d => d ? Math.round((new Date(d)-new Date())/86400000) : -999;
 const g = id => document.getElementById(id);
+const norm = s => String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
 
 function fmtDate(s){
-  if(!s) return '—';
-  const str=String(s);
+  if(!s) return '—'; const str=String(s);
   if(str.includes('/')) return str;
   const [y,m,d]=str.split('-');
   return (d&&m&&y)?`${d}/${m}/${y}`:str;
 }
-
 function rateStatus(r){
-  const v=r.Vigencia||r.vigencia;
-  const d=daysTo(v);
+  const d=daysTo(r.Vigencia||r.vigencia);
   if(d<0) return 'exp'; if(d<=30) return 'warn'; return 'ok';
 }
-
-function val(r,...keys){
-  for(const k of keys){ if(r[k]!==undefined&&r[k]!=='') return r[k]; } return '';
-}
+function val(r,...keys){ for(const k of keys){ if(r[k]!==undefined&&r[k]!=='') return r[k]; } return ''; }
 
 async function apiCall(params){
   if(API_URL.includes('REEMPLAZAR')){ g('config-banner').style.display='block'; throw new Error('URL no configurada'); }
@@ -341,6 +369,64 @@ async function apiCall(params){
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+//  AUTOCOMPLETE — ciudades argentinas (georef.datos.gob.ar)
+// ════════════════════════════════════════════════════════════════════════════
+async function onCityInput(input, field){
+  const q=input.value.trim();
+  const dd=g(`ac-${field}`);
+  clearTimeout(acTimers[field]);
+
+  if(q.length < 2){ dd.style.display='none'; return; }
+
+  acTimers[field]=setTimeout(async ()=>{
+    // 1. Sugerencias desde tarifas del cliente actual
+    const cli=g('v-cli').value;
+    const key=field==='ori'?['Origen','origen']:['Destino','destino'];
+    const fromTarifas=[...new Set(
+      tarifas.filter(r=>(!cli||val(r,'Cliente','cliente')===cli)&&norm(val(r,...key)).includes(norm(q)))
+             .map(r=>val(r,...key))
+    )].filter(Boolean).slice(0,5);
+
+    // 2. Ciudades de Argentina (georef)
+    let cities=[];
+    const cacheKey=norm(q);
+    if(acCache[cacheKey]){
+      cities=acCache[cacheKey];
+    } else {
+      try{
+        const resp=await fetch(`${GEOREF_URL}?nombre=${encodeURIComponent(q)}&max=8&orden=nombre`);
+        const data=await resp.json();
+        cities=(data.localidades||[]).map(l=>({nombre:l.nombre,provincia:l.provincia.nombre}));
+        acCache[cacheKey]=cities;
+      } catch(e){ cities=[]; }
+    }
+
+    // 3. Renderizar
+    let html='';
+    if(fromTarifas.length){
+      html+=`<div class="ac-sep">Rutas del cliente</div>`;
+      html+=fromTarifas.map(c=>`<div class="ac-item" onmousedown="selectCity('${field}','${c.replace(/'/g,"\\'")}')"><div class="ac-dot-route"></div>${c}</div>`).join('');
+    }
+    if(cities.length){
+      if(fromTarifas.length) html+=`<div class="ac-sep">Localidades de Argentina</div>`;
+      html+=cities.map(c=>`<div class="ac-item" onmousedown="selectCity('${field}','${c.nombre.replace(/'/g,"\\'")}')"><div class="ac-dot-city"></div>${c.nombre}<span class="ac-prov">${c.provincia}</span></div>`).join('');
+    }
+    if(!html) html=`<div class="ac-empty">Sin resultados para "${q}"</div>`;
+
+    dd.innerHTML=html;
+    dd.style.display='block';
+  }, 280);
+}
+
+function selectCity(field, value){
+  g(`v-${field}`).value=value;
+  g(`ac-${field}`).style.display='none';
+  calcValor();
+}
+
+function hideAc(field){ g(`ac-${field}`).style.display='none'; }
+
+// ════════════════════════════════════════════════════════════════════════════
 //  TABS
 // ════════════════════════════════════════════════════════════════════════════
 function go(tab){
@@ -349,49 +435,47 @@ function go(tab){
     g(`panel-${t}`).classList.toggle('active',t===tab);
   });
   if(tab==='historial'&&!viajesLoaded) loadViajes();
-  if(tab==='liquidacion'){
-    if(!viajesLoaded) loadViajes();
-    if(!g('lf-mes').value) g('lf-mes').value=todayMonth();
-  }
+  if(tab==='liquidacion'){ if(!viajesLoaded) loadViajes(); if(!g('lf-mes').value) g('lf-mes').value=todayMonth(); }
 }
 
 // ════════════════════════════════════════════════════════════════════════════
 //  TARIFAS
 // ════════════════════════════════════════════════════════════════════════════
-function matchTarifa(arr, cli, veh, ori, dst, km){
-  return arr.find(r=>
-    val(r,'Cliente','cliente')===cli &&
-    val(r,'Vehiculo','vehiculo')===veh &&
-    val(r,'Origen','origen')===ori &&
-    val(r,'Destino','destino')===dst &&
-    rateStatus(r)!=='exp' &&
-    km>=+(val(r,'KmMin','kmMin')||0) &&
-    km<=+(val(r,'KmMax','kmMax')||9999)
-  );
+function matchTarifa(arr,cli,veh,ori,dst,km){
+  // Intento exacto primero, luego normalizado
+  const find=(strict)=>arr.find(r=>{
+    const rCli=val(r,'Cliente','cliente'), rVeh=val(r,'Vehiculo','vehiculo');
+    const rOri=val(r,'Origen','origen'), rDst=val(r,'Destino','destino');
+    const cmpFn=strict?(a,b)=>a===b:(a,b)=>norm(a)===norm(b)||norm(a).includes(norm(b))||norm(b).includes(norm(a));
+    return cmpFn(rCli,cli)&&cmpFn(rVeh,veh)&&cmpFn(rOri,ori)&&cmpFn(rDst,dst)
+      &&rateStatus(r)!=='exp'&&km>=+(val(r,'KmMin','kmMin')||0)&&km<=+(val(r,'KmMax','kmMax')||9999);
+  });
+  return find(true)||find(false);
+}
+
+// Busca tarifa de precio por km para este cliente (sin importar ruta)
+function matchPerKm(arr,cli,veh){
+  return arr.find(r=>norm(val(r,'Cliente','cliente'))===norm(cli)&&norm(val(r,'Vehiculo','vehiculo'))===norm(veh)
+    &&rateStatus(r)!=='exp'&&+(val(r,'PorKm','porKm'))>0&&+(val(r,'Base','base'))===0);
 }
 
 async function loadTarifas(){
-  try {
-    const [cli, fle] = await Promise.all([
-      apiCall({action:'getTarifas'}),
-      apiCall({action:'getTarifasFleteros'})
-    ]);
+  try{
+    const [cli,fle]=await Promise.all([apiCall({action:'getTarifas'}),apiCall({action:'getTarifasFleteros'})]);
     if(Array.isArray(cli)&&cli.length){ tarifas=cli; applyTarifaStats('cli',tarifas); g('ua-cli').style.display='none'; g('ok-cli').style.display='flex'; g('fn-cli').textContent=`${cli.length} tarifas desde Sheets`; populateFormSelects(); }
     if(Array.isArray(fle)&&fle.length){ tarifasFle=fle; applyTarifaStats('fle',tarifasFle); g('ua-fle').style.display='none'; g('ok-fle').style.display='flex'; g('fn-fle').textContent=`${fle.length} tarifas desde Sheets`; }
-  } catch(e){ if(!API_URL.includes('REEMPLAZAR')) console.warn('Sin tarifas:', e.message); }
+  } catch(e){ if(!API_URL.includes('REEMPLAZAR')) console.warn('Sin tarifas:',e.message); }
 }
 
-function applyTarifaStats(tipo, arr){
-  const prefix = tipo==='cli'?'ts':'tf';
-  const clientes=[...new Set(arr.map(r=>val(r,'Cliente','cliente')))].filter(Boolean);
-  const activas=arr.filter(r=>rateStatus(r)==='ok').length;
-  const alertas=arr.filter(r=>rateStatus(r)!=='ok').length;
-  g(`${prefix}-cli`).textContent=clientes.length;
-  g(`${prefix}-act`).textContent=activas;
-  g(`${prefix}-alerta`).textContent=alertas;
+function applyTarifaStats(tipo,arr){
+  const p=tipo==='cli'?'ts':'tf';
+  const clis=[...new Set(arr.map(r=>val(r,'Cliente','cliente')))].filter(Boolean);
+  g(`${p}-cli`).textContent=clis.length;
+  g(`${p}-act`).textContent=arr.filter(r=>rateStatus(r)==='ok').length;
+  g(`${p}-alerta`).textContent=arr.filter(r=>rateStatus(r)!=='ok').length;
 }
 
-function loadCSV(input, tipo){
+function loadCSV(input,tipo){
   const file=input.files[0]; if(!file) return;
   const reader=new FileReader();
   reader.onload=async e=>{
@@ -401,26 +485,16 @@ function loadCSV(input, tipo){
       return{Cliente:c[0],Origen:c[1],Destino:c[2],Vehiculo:c[3],KmMin:+c[4],KmMax:+c[5],Base:+c[6],PorKm:+c[7],Vigencia:c[8]};
     }).filter(r=>r.Cliente);
     if(!parsed.length){ showAlert('alert-tarifas','err','Archivo sin datos válidos.'); return; }
-
-    const action = tipo==='cli'?'saveTarifas':'saveTarifasFleteros';
-    const prefix = tipo==='cli'?'ua-cli':'ua-fle';
-    const okId   = tipo==='cli'?'ok-cli':'ok-fle';
-    const fnId   = tipo==='cli'?'fn-cli':'fn-fle';
-
-    if(tipo==='cli'){ tarifas=parsed; populateFormSelects(); }
-    else { tarifasFle=parsed; }
-
-    applyTarifaStats(tipo, parsed);
-    g(prefix).style.display='none';
-    g(okId).style.display='flex';
+    const action=tipo==='cli'?'saveTarifas':'saveTarifasFleteros';
+    const prefix=tipo==='cli'?'ua-cli':'ua-fle';
+    const okId=tipo==='cli'?'ok-cli':'ok-fle';
+    const fnId=tipo==='cli'?'fn-cli':'fn-fle';
+    if(tipo==='cli'){ tarifas=parsed; populateFormSelects(); } else { tarifasFle=parsed; }
+    applyTarifaStats(tipo,parsed);
+    g(prefix).style.display='none'; g(okId).style.display='flex';
     g(fnId).textContent=`${file.name} · ${parsed.length} tarifas`;
-
-    try {
-      await apiCall({action, data: encodeURIComponent(JSON.stringify({tarifas:parsed}))});
-      showAlert('alert-tarifas','ok',`✓ ${parsed.length} tarifas guardadas en Google Sheets.`);
-    } catch(err){
-      showAlert('alert-tarifas','warn','Tarifas cargadas localmente. Error al guardar en Sheets.');
-    }
+    try{ await apiCall({action,data:encodeURIComponent(JSON.stringify({tarifas:parsed}))}); showAlert('alert-tarifas','ok',`✓ ${parsed.length} tarifas guardadas.`); }
+    catch(err){ showAlert('alert-tarifas','warn','Tarifas cargadas localmente. Error al guardar en Sheets.'); }
   };
   reader.readAsText(file);
 }
@@ -441,29 +515,37 @@ function updOpts(){
   const cli=g('v-cli').value;
   const activas=tarifas.filter(r=>val(r,'Cliente','cliente')===cli&&rateStatus(r)!=='exp');
   const vehs=[...new Set(activas.map(r=>val(r,'Vehiculo','vehiculo')))].filter(Boolean);
-  const oris=[...new Set(activas.map(r=>val(r,'Origen','origen')))].filter(Boolean);
-  const dsts=[...new Set(activas.map(r=>val(r,'Destino','destino')))].filter(Boolean);
   g('v-veh').innerHTML='<option value="">— Seleccionar —</option>'+vehs.map(v=>`<option>${v}</option>`).join('');
-  g('v-ori').innerHTML='<option value="">— Seleccionar —</option>'+oris.map(v=>`<option>${v}</option>`).join('');
-  g('v-dst').innerHTML='<option value="">— Seleccionar —</option>'+dsts.map(v=>`<option>${v}</option>`).join('');
-  // Mostrar sección fletero solo para clientes CD
+  // Limpiar campos de ruta al cambiar cliente
+  g('v-ori').value=''; g('v-dst').value='';
+  hideAc('ori'); hideAc('dst');
   g('fletero-sec').style.display=FLETERO_CLIENTS.includes(cli)?'block':'none';
   g('v-fletero').value='';
+  calcValor();
 }
 
 function calcValor(){
   const cli=g('v-cli').value, veh=g('v-veh').value;
-  const ori=g('v-ori').value, dst=g('v-dst').value;
+  const ori=g('v-ori').value.trim(), dst=g('v-dst').value.trim();
   const km=parseFloat(g('v-km').value);
   const fletero=g('v-fletero').value;
   const area=g('valor-area'), btn=g('btn-guardar');
-  btn.disabled=true; delete btn.dataset.total; delete btn.dataset.costFle;
+  btn.disabled=true; delete btn.dataset.total; delete btn.dataset.costFle; delete btn.dataset.margen;
+
   if(!cli||!veh||!ori||!dst||isNaN(km)||km<=0){ area.innerHTML=''; return; }
 
-  const match=matchTarifa(tarifas,cli,veh,ori,dst,km);
+  // Buscar tarifa
+  let match=matchTarifa(tarifas,cli,veh,ori,dst,km);
+  let perKmMode=false;
+
   if(!match){
-    const hayRuta=tarifas.some(r=>val(r,'Cliente','cliente')===cli&&val(r,'Origen','origen')===ori&&val(r,'Destino','destino')===dst);
-    area.innerHTML=`<div class="warn-box warn-red">${hayRuta?`No hay tarifa para ${Math.round(km)} km en esta ruta. Revisá los rangos.`:`No existe tarifa para ${cli} · ${ori} → ${dst}.`}</div>`;
+    // Buscar tarifa por km genérica (LD sin ruta fija)
+    match=matchPerKm(tarifas,cli,veh);
+    if(match) perKmMode=true;
+  }
+
+  if(!match){
+    area.innerHTML=`<div class="warn-box warn-red">No se encontró tarifa para <strong>${cli}</strong> · ${ori} → ${dst} · ${Math.round(km)} km.<br><small>Verificá que las tarifas estén cargadas o que los campos coincidan con las rutas configuradas.</small></div>`;
     return;
   }
 
@@ -472,12 +554,9 @@ function calcValor(){
 
   // Tarifa fletero
   let costFle=0;
-  if(fletero && FLETERO_CLIENTS.includes(cli)){
-    const mFle=matchTarifa(tarifasFle,cli,veh,ori,dst,km);
-    if(mFle){
-      const bFle=+(val(mFle,'Base','base')||0), pkFle=+(val(mFle,'PorKm','porKm')||0);
-      costFle=Math.round(bFle+km*pkFle);
-    }
+  if(fletero&&FLETERO_CLIENTS.includes(cli)){
+    const mFle=matchTarifa(tarifasFle,cli,veh,ori,dst,km)||matchPerKm(tarifasFle,cli,veh);
+    if(mFle){ const bF=+(val(mFle,'Base','base')||0), pF=+(val(mFle,'PorKm','porKm')||0); costFle=Math.round(bF+km*pF); }
   }
 
   const margen=total-costFle;
@@ -485,17 +564,19 @@ function calcValor(){
   btn.disabled=false;
 
   const st=rateStatus(match);
-  const warnHtml=st==='warn'?`<div class="warn-box warn-amber" style="margin-top:10px">⚠ Esta tarifa vence el ${fmtDate(val(match,'Vigencia','vigencia'))}.</div>`:'';
+  const warn=st==='warn'?`<div class="warn-box warn-amber" style="margin-top:10px">⚠ Tarifa vence el ${fmtDate(val(match,'Vigencia','vigencia'))}. Actualizala pronto.</div>`:'';
+  const modeTag=perKmMode?`<span class="badge b-amber" style="font-size:11px">Por km · ${fmt(porKm)}/km</span>`:
+    `<span class="badge b-gray" style="font-size:11px">Base ${fmt(base)} + ${fmt(porKm)}/km extra</span>`;
 
   area.innerHTML=`<div class="valor-card">
-    <div style="font-size:12px;color:var(--text2)">Valor calculado</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:4px">Valor calculado ${modeTag}</div>
     <div class="valor-num">${fmt(total)}</div>
     <div class="valor-grid">
       <div class="vg-item"><div class="vg-lbl">Ingreso (cliente)</div><div class="vg-val teal">${fmt(total)}</div></div>
       <div class="vg-item"><div class="vg-lbl">Costo fletero</div><div class="vg-val red">${costFle>0?fmt(costFle):'—'}</div></div>
       <div class="vg-item"><div class="vg-lbl">Margen</div><div class="vg-val ${margen>=0?'green':'red'}">${costFle>0?fmt(margen):'—'}</div></div>
     </div>
-  </div>${warnHtml}`;
+  </div>${warn}`;
 }
 
 async function guardarViaje(){
@@ -503,41 +584,31 @@ async function guardarViaje(){
   if(!btn.dataset.total) return;
   btn.disabled=true; g('saving-msg').style.display='inline-flex';
   const viaje={
-    fecha:    g('v-fecha').value||today(),
-    cliente:  g('v-cli').value,
-    origen:   g('v-ori').value,
-    destino:  g('v-dst').value,
-    vehiculo: g('v-veh').value,
-    km:       Math.round(+g('v-km').value),
-    chofer:   g('v-chofer').value.trim(),
-    patente:  g('v-patente').value.trim().toUpperCase(),
-    remito:   g('v-remito').value.trim(),
-    valor:    +btn.dataset.total,
-    estado:   g('v-estado').value,
-    fletero:  g('v-fletero').value||'',
-    tarifaFletero: +btn.dataset.costFle||0,
-    margen:   +btn.dataset.margen||+btn.dataset.total,
+    fecha:g('v-fecha').value||today(), cliente:g('v-cli').value,
+    origen:g('v-ori').value.trim(), destino:g('v-dst').value.trim(),
+    vehiculo:g('v-veh').value, km:Math.round(+g('v-km').value),
+    chofer:g('v-chofer').value.trim(), patente:g('v-patente').value.trim().toUpperCase(),
+    remito:g('v-remito').value.trim(), valor:+btn.dataset.total,
+    estado:g('v-estado').value, fletero:g('v-fletero').value||'',
+    tarifaFletero:+btn.dataset.costFle||0, margen:+btn.dataset.margen||+btn.dataset.total,
   };
-  try {
-    const res=await apiCall({action:'addViaje', data:encodeURIComponent(JSON.stringify(viaje))});
+  try{
+    const res=await apiCall({action:'addViaje',data:encodeURIComponent(JSON.stringify(viaje))});
     viaje.id=res.id; viajes.unshift(viaje); viajesLoaded=true;
     actualizarBadge();
     showAlert('alert-viaje','ok','✓ Viaje guardado en Google Sheets correctamente.');
     limpiarForm();
-  } catch(e){
-    showAlert('alert-viaje','err',`Error al guardar: ${e.message}`);
-    btn.disabled=false;
-  }
+  } catch(e){ showAlert('alert-viaje','err',`Error al guardar: ${e.message}`); btn.disabled=false; }
   g('saving-msg').style.display='none';
 }
 
 function limpiarForm(){
-  ['v-cli','v-veh','v-ori','v-dst','v-fletero'].forEach(id=>g(id).value='');
-  ['v-km','v-chofer','v-patente','v-remito'].forEach(id=>g(id).value='');
+  ['v-cli','v-veh','v-fletero'].forEach(id=>g(id).value='');
+  ['v-km','v-chofer','v-patente','v-remito','v-ori','v-dst'].forEach(id=>g(id).value='');
   g('v-estado').value='Pendiente'; g('v-fecha').value=today();
   g('valor-area').innerHTML=''; g('btn-guardar').disabled=true;
   delete g('btn-guardar').dataset.total;
-  g('fletero-sec').style.display='none'; updOpts();
+  g('fletero-sec').style.display='none'; hideAc('ori'); hideAc('dst');
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -548,18 +619,18 @@ async function loadViajes(force=false){
   g('hist-state').style.display='block';
   g('hist-state').innerHTML='<span class="spinner"></span>Cargando desde Sheets...';
   g('hist-table').style.display='none'; g('hist-empty').style.display='none';
-  try {
+  try{
     const data=await apiCall({action:'getViajes'});
-    viajes=Array.isArray(data)?data:[];
-    viajesLoaded=true; poblarFiltros(); actualizarBadge(); renderHist();
+    viajes=Array.isArray(data)?data:[]; viajesLoaded=true;
+    poblarFiltros(); actualizarBadge(); renderHist();
   } catch(e){ g('hist-state').innerHTML=`Error: ${e.message}`; }
 }
 
 function poblarFiltros(){
   const clis=[...new Set(viajes.map(v=>val(v,'cliente','Cliente')))].filter(Boolean);
-  const fles=[...new Set(viajes.map(v=>val(v,'fletero','Fletero')))].filter(Boolean);
+  const fles=[...new Set(viajes.map(v=>val(v,'fletero','Fletero')))].filter(f=>f&&f!=='');
   g('hf-cli').innerHTML='<option value="">Todos los clientes</option>'+clis.map(c=>`<option>${c}</option>`).join('');
-  g('hf-fle').innerHTML='<option value="">Todos los fleteros</option>'+fles.filter(f=>f&&f!=='').map(f=>`<option>${f}</option>`).join('');
+  g('hf-fle').innerHTML='<option value="">Todos los fleteros</option>'+fles.map(f=>`<option>${f}</option>`).join('');
 }
 
 function actualizarBadge(){
@@ -568,8 +639,7 @@ function actualizarBadge(){
 }
 
 function renderHist(){
-  const fc=g('hf-cli').value, ff=g('hf-fle').value;
-  const fe=g('hf-est').value, fm=g('hf-mes').value;
+  const fc=g('hf-cli').value, ff=g('hf-fle').value, fe=g('hf-est').value, fm=g('hf-mes').value;
   const filtered=viajes.filter(v=>{
     if(fc&&val(v,'cliente','Cliente')!==fc) return false;
     if(ff&&val(v,'fletero','Fletero')!==ff) return false;
@@ -617,7 +687,7 @@ async function cambiarEstado(sel){
   sel.className=`est-sel ${nuevo.toLowerCase()}`;
   const v=viajes.find(v=>String(val(v,'id','ID','_id'))===String(id));
   if(v){v.estado=nuevo;v.Estado=nuevo;} actualizarBadge();
-  try{ await apiCall({action:'updateEstado', data:encodeURIComponent(JSON.stringify({id,estado:nuevo}))}); }
+  try{ await apiCall({action:'updateEstado',data:encodeURIComponent(JSON.stringify({id,estado:nuevo}))}); }
   catch(e){ console.warn('No se pudo actualizar el estado'); }
 }
 
@@ -641,26 +711,17 @@ function exportCSV(){
 function generarLiq(){
   const fle=g('lf-fle').value, mes=g('lf-mes').value;
   const area=g('liq-area');
-  if(!fle){ area.innerHTML='<div class="alert alert-warn">Seleccioná un fletero para generar la liquidación.</div>'; return; }
-  if(!mes){ area.innerHTML='<div class="alert alert-warn">Seleccioná el mes para la liquidación.</div>'; return; }
+  if(!fle){ area.innerHTML='<div class="alert alert-warn">Seleccioná un fletero.</div>'; return; }
+  if(!mes){ area.innerHTML='<div class="alert alert-warn">Seleccioná el mes.</div>'; return; }
   if(!viajesLoaded){ area.innerHTML='<div class="loading"><span class="spinner"></span>Cargando datos...</div>'; loadViajes().then(()=>generarLiq()); return; }
-
   const filtrados=viajes.filter(v=>val(v,'fletero','Fletero')===fle&&String(val(v,'fecha','Fecha')||'').startsWith(mes));
   const ing=filtrados.reduce((s,v)=>s+(+val(v,'valor','Valor')||0),0);
   const cost=filtrados.reduce((s,v)=>s+(+val(v,'tarifaFletero','TarifaFletero')||0),0);
   const mg=filtrados.reduce((s,v)=>s+(+val(v,'margen','Margen')||0),0);
-
-  g('lt-n').textContent=filtrados.length;
-  g('lt-ing').textContent=fmt(ing);
-  g('lt-cost').textContent=fmt(cost);
-  g('lt-mg').textContent=fmt(mg);
+  g('lt-n').textContent=filtrados.length; g('lt-ing').textContent=fmt(ing);
+  g('lt-cost').textContent=fmt(cost); g('lt-mg').textContent=fmt(mg);
   g('liq-total').style.display=filtrados.length?'grid':'none';
-
-  if(!filtrados.length){
-    area.innerHTML='<div class="empty">No hay viajes para este fletero en el período seleccionado.</div>';
-    return;
-  }
-
+  if(!filtrados.length){ area.innerHTML='<div class="empty">No hay viajes para este fletero en el período.</div>'; return; }
   const [y,m]=mes.split('-');
   const mesNombre=new Date(+y,+m-1,1).toLocaleDateString('es-AR',{month:'long',year:'numeric'});
   area.innerHTML=`
@@ -668,50 +729,41 @@ function generarLiq(){
       <div style="font-size:15px;font-weight:500">${fle} · ${mesNombre}</div>
       <button class="btn btn-sm" onclick="exportLiq('${fle}','${mes}')">↓ Exportar liquidación</button>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr>
-          <th>Fecha</th><th>Cliente</th><th>Ruta</th><th>Vehículo</th>
-          <th>Km</th><th>Ingreso</th><th>A pagar</th><th>Margen</th>
-        </tr></thead>
-        <tbody>
-          ${filtrados.map(v=>`<tr>
-            <td>${fmtDate(val(v,'fecha','Fecha'))}</td>
-            <td><span class="badge b-blue">${val(v,'cliente','Cliente')}</span></td>
-            <td>${val(v,'origen','Origen')} → ${val(v,'destino','Destino')}</td>
-            <td>${val(v,'vehiculo','Vehiculo')}</td>
-            <td class="mono">${Math.round(+val(v,'km','Km')||0)}</td>
-            <td class="mono sv-blue">${fmt(val(v,'valor','Valor'))}</td>
-            <td class="mono sv-red"><strong>${fmt(val(v,'tarifaFletero','TarifaFletero')||0)}</strong></td>
-            <td class="mono sv-green">${fmt(val(v,'margen','Margen')||0)}</td>
-          </tr>`).join('')}
-          <tr style="background:var(--bg2)">
-            <td colspan="5" style="font-weight:500;font-size:12px">TOTAL</td>
-            <td class="mono" style="font-weight:500">${fmt(ing)}</td>
-            <td class="mono" style="font-weight:500;color:var(--red-text)">${fmt(cost)}</td>
-            <td class="mono" style="font-weight:500;color:var(--green-text)">${fmt(mg)}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>`;
+    <div class="table-wrap"><table>
+      <thead><tr><th>Fecha</th><th>Cliente</th><th>Ruta</th><th>Vehículo</th><th>Km</th><th>Ingreso</th><th>A pagar</th><th>Margen</th></tr></thead>
+      <tbody>
+        ${filtrados.map(v=>`<tr>
+          <td>${fmtDate(val(v,'fecha','Fecha'))}</td>
+          <td><span class="badge b-blue">${val(v,'cliente','Cliente')}</span></td>
+          <td>${val(v,'origen','Origen')} → ${val(v,'destino','Destino')}</td>
+          <td>${val(v,'vehiculo','Vehiculo')}</td>
+          <td class="mono">${Math.round(+val(v,'km','Km')||0)}</td>
+          <td class="mono sv-blue">${fmt(val(v,'valor','Valor'))}</td>
+          <td class="mono sv-red"><strong>${fmt(val(v,'tarifaFletero','TarifaFletero')||0)}</strong></td>
+          <td class="mono sv-green">${fmt(val(v,'margen','Margen')||0)}</td>
+        </tr>`).join('')}
+        <tr style="background:var(--bg2)">
+          <td colspan="5" style="font-weight:500;font-size:12px">TOTAL</td>
+          <td class="mono" style="font-weight:500">${fmt(ing)}</td>
+          <td class="mono" style="font-weight:500;color:var(--red-text)">${fmt(cost)}</td>
+          <td class="mono" style="font-weight:500;color:var(--green-text)">${fmt(mg)}</td>
+        </tr>
+      </tbody>
+    </table></div>`;
 }
 
-function exportLiq(fle, mes){
+function exportLiq(fle,mes){
   const filtrados=viajes.filter(v=>val(v,'fletero','Fletero')===fle&&String(val(v,'fecha','Fecha')||'').startsWith(mes));
   if(!filtrados.length) return;
   const head='Fecha,Cliente,Origen,Destino,Vehiculo,Km,Ingreso ARS,A Pagar ARS,Margen ARS';
-  const rows=filtrados.map(v=>[
-    val(v,'fecha','Fecha'),val(v,'cliente','Cliente'),val(v,'origen','Origen'),val(v,'destino','Destino'),
-    val(v,'vehiculo','Vehiculo'),val(v,'km','Km'),val(v,'valor','Valor'),
-    val(v,'tarifaFletero','TarifaFletero')||0,val(v,'margen','Margen')||0
-  ].map(x=>`"${x}"`).join(','));
+  const rows=filtrados.map(v=>[val(v,'fecha','Fecha'),val(v,'cliente','Cliente'),val(v,'origen','Origen'),val(v,'destino','Destino'),val(v,'vehiculo','Vehiculo'),val(v,'km','Km'),val(v,'valor','Valor'),val(v,'tarifaFletero','TarifaFletero')||0,val(v,'margen','Margen')||0].map(x=>`"${x}"`).join(','));
   const blob=new Blob([head+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download=`liquidacion_${fle.split(' ')[0]}_${mes}.csv`; a.click();
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  ALERTS
+//  ALERTS & INIT
 // ════════════════════════════════════════════════════════════════════════════
 function showAlert(id,type,msg){
   const map={ok:'alert-ok',err:'alert-err',warn:'alert-warn'};
@@ -719,9 +771,6 @@ function showAlert(id,type,msg){
   setTimeout(()=>{ if(g(id)) g(id).innerHTML=''; },5000);
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-//  INIT
-// ════════════════════════════════════════════════════════════════════════════
 g('header-date').textContent=new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
 g('v-fecha').value=today();
 if(API_URL.includes('REEMPLAZAR')) g('config-banner').style.display='block';

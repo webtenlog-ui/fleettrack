@@ -7,221 +7,172 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #ffffff; --bg2: #f8f7f4; --bg3: #f1efe8;
-  --text: #1a1917; --text2: #5f5e5a; --text3: #888780;
-  --border: rgba(0,0,0,0.13); --border2: rgba(0,0,0,0.07);
-  --blue-bg: #E6F1FB; --blue-text: #0C447C; --blue: #378ADD;
-  --teal-bg: #E1F5EE; --teal-text: #085041; --teal: #1D9E75;
-  --amber-bg: #FAEEDA; --amber-text: #633806; --amber: #BA7517;
-  --red-bg: #FCEBEB; --red-text: #791F1F;
-  --gray-bg: #F1EFE8; --gray-text: #444441;
-  --r: 8px; --rl: 12px;
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
-  --mono: 'SF Mono', 'Roboto Mono', 'Consolas', monospace;
+  --bg:#fff; --bg2:#f8f7f4; --bg3:#f1efe8;
+  --text:#1a1917; --text2:#5f5e5a; --text3:#888780;
+  --border:rgba(0,0,0,0.13); --border2:rgba(0,0,0,0.07);
+  --blue-bg:#E6F1FB; --blue-text:#0C447C; --blue:#378ADD;
+  --teal-bg:#E1F5EE; --teal-text:#085041; --teal:#1D9E75;
+  --amber-bg:#FAEEDA; --amber-text:#633806; --amber:#BA7517;
+  --red-bg:#FCEBEB; --red-text:#791F1F;
+  --green-bg:#EAF3DE; --green-text:#27500A;
+  --gray-bg:#F1EFE8; --gray-text:#444441;
+  --r:8px; --rl:12px;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;
+  --mono:'SF Mono','Roboto Mono','Consolas',monospace;
 }
-body { font-family: var(--font); font-size: 14px; color: var(--text); background: var(--bg3); min-height: 100vh; }
-
-/* Header */
-.header { background: var(--bg); border-bottom: 0.5px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 52px; position: sticky; top: 0; z-index: 100; }
-.logo { font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 8px; letter-spacing: -.01em; }
-.logo-dot { width: 8px; height: 8px; background: var(--teal); border-radius: 50%; }
-.header-right { font-size: 12px; color: var(--text2); }
-
-/* Layout */
-.main { max-width: 1120px; margin: 0 auto; padding: 1.5rem; }
-.card { background: var(--bg); border-radius: var(--rl); border: 0.5px solid var(--border); }
-
-/* Tabs */
-.tabs { display: flex; gap: 0; background: var(--bg); border-radius: var(--rl) var(--rl) 0 0; border: 0.5px solid var(--border); border-bottom: none; padding: 0 1.5rem; }
-.tab { padding: 13px 16px; font-size: 13px; color: var(--text2); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -0.5px; font-family: var(--font); transition: color .12s; }
-.tab:hover { color: var(--text); }
-.tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
-.tab-badge { display: inline-block; background: var(--amber-bg); color: var(--amber-text); font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 99px; margin-left: 4px; vertical-align: middle; }
-
-/* Panels */
-.panel { background: var(--bg); border-radius: 0 0 var(--rl) var(--rl); border: 0.5px solid var(--border); border-top: none; padding: 1.5rem; display: none; }
-.panel.active { display: block; }
-
-/* Stats */
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.5rem; }
-.stats.cols3 { grid-template-columns: repeat(3, 1fr); }
-.stat { background: var(--bg2); border-radius: var(--r); padding: 14px 16px; }
-.stat-val { font-size: 21px; font-weight: 500; font-family: var(--mono); }
-.stat-lbl { font-size: 11px; color: var(--text2); margin-top: 3px; }
-.sv-blue { color: var(--blue-text); } .sv-amber { color: var(--amber); } .sv-teal { color: var(--teal); } .sv-red { color: var(--red-text); }
-
-/* Section titles */
-.sec-title { font-size: 11px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border2); }
-.form-section { margin-bottom: 1.5rem; }
-
-/* Form */
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.form-grid.g3 { grid-template-columns: 1fr 1fr 1fr; }
-.form-grid.g1 { grid-template-columns: 1fr; }
-.full { grid-column: 1 / -1; }
-.field { display: flex; flex-direction: column; gap: 4px; }
-label { font-size: 11px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: .03em; }
-input, select { padding: 8px 10px; border: 0.5px solid var(--border); border-radius: var(--r); font-size: 13px; font-family: var(--font); color: var(--text); background: var(--bg); width: 100%; transition: border-color .15s; -webkit-appearance: none; }
-input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(55,138,221,.12); }
-input::placeholder { color: var(--text3); }
-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-
-/* Valor calculado */
-.valor-card { background: var(--bg2); border-radius: var(--rl); padding: 1.25rem 1.5rem; margin: 1.25rem 0; border: 0.5px solid var(--border); }
-.valor-lbl { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-.valor-num { font-size: 34px; font-weight: 500; font-family: var(--mono); margin-bottom: 10px; }
-.valor-breakdown { display: flex; gap: 16px; flex-wrap: wrap; padding-top: 10px; border-top: 0.5px solid var(--border2); }
-.vb-item { font-size: 12px; color: var(--text2); } .vb-item strong { color: var(--text); font-weight: 500; }
-.warn-box { padding: 10px 12px; border-radius: var(--r); font-size: 13px; margin: 1rem 0; }
-.warn-red { background: var(--red-bg); color: var(--red-text); }
-.warn-amber { background: var(--amber-bg); color: var(--amber-text); }
-
-/* Buttons */
-.btn { padding: 9px 18px; border-radius: var(--r); border: 0.5px solid var(--border); background: none; font-size: 13px; font-family: var(--font); cursor: pointer; color: var(--text); display: inline-flex; align-items: center; gap: 6px; transition: background .12s; white-space: nowrap; }
-.btn:hover { background: var(--bg2); }
-.btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
-.btn-primary:hover { opacity: .85; background: var(--text); }
-.btn-primary:disabled { opacity: .35; cursor: not-allowed; }
-.btn-sm { padding: 5px 10px; font-size: 12px; }
-.btn-row { display: flex; gap: 8px; align-items: center; margin-top: 1.25rem; flex-wrap: wrap; }
-.saving-msg { font-size: 13px; color: var(--text2); display: none; }
-
-/* Badges */
-.badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 500; }
-.b-blue { background: var(--blue-bg); color: var(--blue-text); }
-.b-teal { background: var(--teal-bg); color: var(--teal-text); }
-.b-amber { background: var(--amber-bg); color: var(--amber-text); }
-.b-red { background: var(--red-bg); color: var(--red-text); }
-.b-gray { background: var(--gray-bg); color: var(--gray-text); }
-
-/* Table */
-.table-wrap { overflow-x: auto; border: 0.5px solid var(--border); border-radius: var(--rl); }
-table { width: 100%; border-collapse: collapse; font-size: 12.5px; table-layout: auto; }
-th { padding: 9px 12px; text-align: left; font-size: 11px; font-weight: 500; color: var(--text2); border-bottom: 0.5px solid var(--border); background: var(--bg2); white-space: nowrap; }
-td { padding: 9px 12px; border-bottom: 0.5px solid var(--border2); vertical-align: middle; color: var(--text); }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--bg2); }
-.mono { font-family: var(--mono); font-size: 12px; }
-
-/* Estado select inline */
-.est-sel { border: none; background: none; font-size: 11px; font-weight: 500; cursor: pointer; padding: 3px 8px; border-radius: 99px; font-family: var(--font); }
-.est-sel.pendiente { background: var(--amber-bg); color: var(--amber-text); }
-.est-sel.realizado { background: var(--teal-bg); color: var(--teal-text); }
-.est-sel.facturado { background: var(--blue-bg); color: var(--blue-text); }
-
-/* Filters */
-.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
-.filters select, .filters input[type=month] { width: auto; flex: 1; min-width: 140px; }
-
-/* Upload */
-.upload-zone { border: 1px dashed var(--border); border-radius: var(--rl); padding: 2rem; text-align: center; cursor: pointer; transition: background .15s; margin-bottom: 1.25rem; }
-.upload-zone:hover { background: var(--bg2); }
-.upload-zone input { display: none; }
-.file-ok-bar { display: flex; align-items: center; gap: 8px; font-size: 13px; background: var(--teal-bg); color: var(--teal-text); padding: 8px 12px; border-radius: var(--r); margin-bottom: 1.25rem; }
-
-/* Alerts */
-.alert { padding: 10px 13px; border-radius: var(--r); font-size: 13px; margin-bottom: 1rem; }
-.alert-ok { background: var(--teal-bg); color: var(--teal-text); }
-.alert-err { background: var(--red-bg); color: var(--red-text); }
-.alert-warn { background: var(--amber-bg); color: var(--amber-text); }
-
-/* States */
-.loading { text-align: center; padding: 3rem 1rem; color: var(--text2); font-size: 13px; }
-.empty { text-align: center; padding: 3rem 1rem; color: var(--text2); font-size: 13px; }
-.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--text2); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Config banner */
-.config-banner { background: var(--amber-bg); border: 0.5px solid #FAC775; border-radius: var(--rl); padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 13px; color: var(--amber-text); }
-.config-banner strong { display: block; margin-bottom: 4px; font-size: 14px; }
-
-.divider { height: 0.5px; background: var(--border2); margin: 1.25rem 0; }
-.hint { font-size: 12px; color: var(--text2); margin-top: 6px; }
+body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg3);min-height:100vh}
+.header{background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.logo{font-size:15px;font-weight:500;display:flex;align-items:center;gap:8px}
+.logo-dot{width:8px;height:8px;background:var(--teal);border-radius:50%}
+.header-right{font-size:12px;color:var(--text2)}
+.main{max-width:1160px;margin:0 auto;padding:1.5rem}
+.tabs{display:flex;background:var(--bg);border-radius:var(--rl) var(--rl) 0 0;border:0.5px solid var(--border);border-bottom:none;padding:0 1.5rem}
+.tab{padding:13px 16px;font-size:13px;color:var(--text2);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-0.5px;font-family:var(--font);transition:color .12s}
+.tab:hover{color:var(--text)}.tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}
+.tab-badge{display:inline-block;background:var(--amber-bg);color:var(--amber-text);font-size:10px;font-weight:600;padding:1px 5px;border-radius:99px;margin-left:4px;vertical-align:middle}
+.panel{background:var(--bg);border-radius:0 0 var(--rl) var(--rl);border:0.5px solid var(--border);border-top:none;padding:1.5rem;display:none}
+.panel.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+.stats.c3{grid-template-columns:repeat(3,1fr)}.stats.c5{grid-template-columns:repeat(5,1fr)}
+.stat{background:var(--bg2);border-radius:var(--r);padding:14px 16px}
+.stat-val{font-size:20px;font-weight:500;font-family:var(--mono)}
+.stat-lbl{font-size:11px;color:var(--text2);margin-top:3px}
+.sv-blue{color:var(--blue-text)}.sv-amber{color:var(--amber)}.sv-teal{color:var(--teal)}.sv-red{color:var(--red-text)}.sv-green{color:var(--green-text)}
+.sec-title{font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid var(--border2)}
+.form-sec{margin-bottom:1.5rem}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fg.g3{grid-template-columns:1fr 1fr 1fr}.fg.g1{grid-template-columns:1fr}
+.full{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:4px}
+label{font-size:11px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:.03em}
+input,select{padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--r);font-size:13px;font-family:var(--font);color:var(--text);background:var(--bg);width:100%;transition:border-color .15s;-webkit-appearance:none}
+input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(55,138,221,.12)}
+input::placeholder{color:var(--text3)}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.valor-card{background:var(--bg2);border-radius:var(--rl);padding:1.25rem 1.5rem;margin:1.25rem 0;border:0.5px solid var(--border)}
+.valor-num{font-size:32px;font-weight:500;font-family:var(--mono);margin:4px 0 12px}
+.valor-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding-top:12px;border-top:0.5px solid var(--border2)}
+.vg-item{background:var(--bg);border-radius:var(--r);padding:10px 12px;border:0.5px solid var(--border2)}
+.vg-lbl{font-size:11px;color:var(--text2);margin-bottom:4px}
+.vg-val{font-size:15px;font-weight:500;font-family:var(--mono)}
+.vg-val.teal{color:var(--teal)}.vg-val.red{color:var(--red-text)}.vg-val.green{color:var(--green-text)}
+.warn-box{padding:10px 12px;border-radius:var(--r);font-size:13px;margin:1rem 0}
+.warn-red{background:var(--red-bg);color:var(--red-text)}.warn-amber{background:var(--amber-bg);color:var(--amber-text)}
+.btn{padding:9px 18px;border-radius:var(--r);border:0.5px solid var(--border);background:none;font-size:13px;font-family:var(--font);cursor:pointer;color:var(--text);display:inline-flex;align-items:center;gap:6px;transition:background .12s;white-space:nowrap}
+.btn:hover{background:var(--bg2)}.btn-primary{background:var(--text);color:var(--bg);border-color:var(--text)}
+.btn-primary:hover{opacity:.85;background:var(--text)}.btn-primary:disabled{opacity:.35;cursor:not-allowed}
+.btn-sm{padding:5px 10px;font-size:12px}.btn-row{display:flex;gap:8px;align-items:center;margin-top:1.25rem;flex-wrap:wrap}
+.saving-msg{font-size:13px;color:var(--text2);display:none;align-items:center;gap:6px}
+.badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500}
+.b-blue{background:var(--blue-bg);color:var(--blue-text)}.b-teal{background:var(--teal-bg);color:var(--teal-text)}
+.b-amber{background:var(--amber-bg);color:var(--amber-text)}.b-red{background:var(--red-bg);color:var(--red-text)}
+.b-gray{background:var(--gray-bg);color:var(--gray-text)}.b-green{background:var(--green-bg);color:var(--green-text)}
+.table-wrap{overflow-x:auto;border:0.5px solid var(--border);border-radius:var(--rl)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{padding:9px 12px;text-align:left;font-size:11px;font-weight:500;color:var(--text2);border-bottom:0.5px solid var(--border);background:var(--bg2);white-space:nowrap}
+td{padding:9px 12px;border-bottom:0.5px solid var(--border2);vertical-align:middle;color:var(--text)}
+tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
+.mono{font-family:var(--mono);font-size:12px}
+.est-sel{border:none;background:none;font-size:11px;font-weight:500;cursor:pointer;padding:3px 8px;border-radius:99px;font-family:var(--font)}
+.est-sel.pendiente{background:var(--amber-bg);color:var(--amber-text)}
+.est-sel.realizado{background:var(--teal-bg);color:var(--teal-text)}
+.est-sel.facturado{background:var(--blue-bg);color:var(--blue-text)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.filters select,.filters input[type=month]{width:auto;flex:1;min-width:140px}
+.upload-zone{border:1px dashed var(--border);border-radius:var(--rl);padding:1.75rem;text-align:center;cursor:pointer;transition:background .15s;margin-bottom:1.25rem}
+.upload-zone:hover{background:var(--bg2)}.upload-zone input{display:none}
+.file-ok-bar{display:flex;align-items:center;gap:8px;font-size:13px;background:var(--teal-bg);color:var(--teal-text);padding:8px 12px;border-radius:var(--r);margin-bottom:1rem}
+.alert{padding:10px 13px;border-radius:var(--r);font-size:13px;margin-bottom:1rem}
+.alert-ok{background:var(--teal-bg);color:var(--teal-text)}
+.alert-err{background:var(--red-bg);color:var(--red-text)}
+.alert-warn{background:var(--amber-bg);color:var(--amber-text)}
+.loading{text-align:center;padding:3rem 1rem;color:var(--text2);font-size:13px}
+.empty{text-align:center;padding:3rem 1rem;color:var(--text2);font-size:13px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--text2);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.config-banner{background:var(--amber-bg);border:0.5px solid #FAC775;border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:13px;color:var(--amber-text)}
+.config-banner strong{display:block;margin-bottom:4px;font-size:14px}
+.divider{height:0.5px;background:var(--border2);margin:1.5rem 0}
+.hint{font-size:12px;color:var(--text2);margin-top:6px}
+.tar-sections{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.tar-sec{border:0.5px solid var(--border);border-radius:var(--rl);padding:1.25rem}
+.tar-sec-title{font-size:13px;font-weight:500;margin-bottom:1rem}
+.liq-header{background:var(--bg2);border-radius:var(--rl);padding:1.25rem 1.5rem;margin-bottom:1.5rem;border:0.5px solid var(--border)}
+.liq-filters{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+.liq-total{margin-top:1rem;padding-top:1rem;border-top:0.5px solid var(--border2);display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.liq-tot-item{text-align:center}
+.liq-tot-val{font-size:18px;font-weight:500;font-family:var(--mono)}
+.liq-tot-lbl{font-size:11px;color:var(--text2);margin-top:2px}
 </style>
 </head>
 <body>
-
 <header class="header">
   <div class="logo"><div class="logo-dot"></div> FleetTrack</div>
   <div class="header-right" id="header-date"></div>
 </header>
-
 <main class="main">
-
-  <!-- Config warning -->
   <div class="config-banner" id="config-banner" style="display:none">
     <strong>⚠ Configuración pendiente</strong>
-    La app no está conectada a Google Sheets. Seguí las instrucciones del archivo <code>INSTRUCCIONES.md</code> para conectarla y reemplazá la URL del script en la variable <code>API_URL</code>.
+    Reemplazá la variable <code>API_URL</code> con tu URL de Google Apps Script.
   </div>
-
   <div class="tabs">
     <button class="tab active" onclick="go('viaje')">Nuevo viaje</button>
     <button class="tab" onclick="go('historial')">Historial <span class="tab-badge" id="badge-pend" style="display:none">0</span></button>
+    <button class="tab" onclick="go('liquidacion')">Liquidación</button>
     <button class="tab" onclick="go('tarifas')">Tarifas</button>
   </div>
 
   <!-- ═══ NUEVO VIAJE ═══════════════════════════════════════════════════════ -->
   <div id="panel-viaje" class="panel active">
     <div id="alert-viaje"></div>
-
-    <div class="form-section">
+    <div class="form-sec">
       <div class="sec-title">Cliente y ruta</div>
-      <div class="form-grid">
-        <div class="field">
-          <label>Cliente</label>
-          <select id="v-cli" onchange="updOpts(); calcValor()"><option value="">— Seleccionar —</option></select>
-        </div>
-        <div class="field">
-          <label>Tipo de vehículo</label>
-          <select id="v-veh" onchange="calcValor()"><option value="">— Seleccionar —</option></select>
-        </div>
-        <div class="field">
-          <label>Origen</label>
-          <select id="v-ori" onchange="calcValor()"><option value="">— Seleccionar —</option></select>
-        </div>
-        <div class="field">
-          <label>Destino</label>
-          <select id="v-dst" onchange="calcValor()"><option value="">— Seleccionar —</option></select>
-        </div>
+      <div class="fg">
+        <div class="field"><label>Cliente</label>
+          <select id="v-cli" onchange="updOpts();calcValor()"><option value="">— Seleccionar —</option></select></div>
+        <div class="field"><label>Tipo de vehículo</label>
+          <select id="v-veh" onchange="calcValor()"><option value="">— Seleccionar —</option></select></div>
+        <div class="field"><label>Origen</label>
+          <select id="v-ori" onchange="calcValor()"><option value="">— Seleccionar —</option></select></div>
+        <div class="field"><label>Destino</label>
+          <select id="v-dst" onchange="calcValor()"><option value="">— Seleccionar —</option></select></div>
       </div>
     </div>
-
-    <div class="form-section">
+    <div class="form-sec">
       <div class="sec-title">Datos del viaje</div>
-      <div class="form-grid g3">
-        <div class="field">
-          <label>Km recorridos</label>
-          <input type="number" id="v-km" placeholder="ej: 320" min="0" step="1" oninput="calcValor()">
-        </div>
-        <div class="field">
-          <label>Fecha del viaje</label>
-          <input type="date" id="v-fecha">
-        </div>
-        <div class="field">
-          <label>Estado</label>
+      <div class="fg g3">
+        <div class="field"><label>Km recorridos</label>
+          <input type="number" id="v-km" placeholder="ej: 79" min="0" step="1" oninput="calcValor()"></div>
+        <div class="field"><label>Fecha del viaje</label>
+          <input type="date" id="v-fecha"></div>
+        <div class="field"><label>Estado</label>
           <select id="v-estado">
             <option value="Pendiente">Pendiente</option>
             <option value="Realizado">Realizado</option>
             <option value="Facturado">Facturado</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Chofer / Conductor</label>
-          <input type="text" id="v-chofer" placeholder="Nombre completo" autocomplete="off">
-        </div>
-        <div class="field">
-          <label>Patente del camión</label>
-          <input type="text" id="v-patente" placeholder="ej: AB 123 CD" style="text-transform:uppercase">
-        </div>
-        <div class="field">
-          <label>Nro. de remito</label>
-          <input type="text" id="v-remito" placeholder="ej: 00012345">
-        </div>
+          </select></div>
+        <div class="field"><label>Chofer / Conductor</label>
+          <input type="text" id="v-chofer" placeholder="Nombre completo" autocomplete="off"></div>
+        <div class="field"><label>Patente del camión</label>
+          <input type="text" id="v-patente" placeholder="ej: AB 123 CD" style="text-transform:uppercase"></div>
+        <div class="field"><label>Nro. de remito</label>
+          <input type="text" id="v-remito" placeholder="ej: 00012345"></div>
       </div>
     </div>
-
+    <div class="form-sec" id="fletero-sec" style="display:none">
+      <div class="sec-title">Fletero externo</div>
+      <div class="fg g3">
+        <div class="field"><label>Fletero</label>
+          <select id="v-fletero" onchange="calcValor()">
+            <option value="">— Sin fletero (chofer propio) —</option>
+            <option>Brizuela Anibal</option>
+            <option>Ojeda Carlos</option>
+            <option>Scarimbolo Juan</option>
+            <option>Sandoval Gonzalo</option>
+          </select></div>
+      </div>
+    </div>
     <div id="valor-area"></div>
-
     <div class="btn-row">
       <button class="btn btn-primary" id="btn-guardar" onclick="guardarViaje()" disabled>Guardar viaje</button>
       <button class="btn" onclick="limpiarForm()">Limpiar</button>
@@ -234,34 +185,30 @@ tr:hover td { background: var(--bg2); }
     <div class="stats" id="hist-stats">
       <div class="stat"><div class="stat-val" id="hs-n">—</div><div class="stat-lbl">Total viajes</div></div>
       <div class="stat"><div class="stat-val sv-blue" id="hs-fac">—</div><div class="stat-lbl">Total facturado</div></div>
-      <div class="stat"><div class="stat-val sv-amber" id="hs-pend">—</div><div class="stat-lbl">Pendiente facturar</div></div>
-      <div class="stat"><div class="stat-val sv-teal" id="hs-prom">—</div><div class="stat-lbl">Promedio por viaje</div></div>
+      <div class="stat"><div class="stat-val sv-red" id="hs-cost">—</div><div class="stat-lbl">Costo fleteros</div></div>
+      <div class="stat"><div class="stat-val sv-green" id="hs-margen">—</div><div class="stat-lbl">Margen</div></div>
     </div>
-
     <div class="filters">
       <select id="hf-cli" onchange="renderHist()"><option value="">Todos los clientes</option></select>
-      <select id="hf-cho" onchange="renderHist()"><option value="">Todos los choferes</option></select>
+      <select id="hf-fle" onchange="renderHist()"><option value="">Todos los fleteros</option></select>
       <select id="hf-est" onchange="renderHist()">
         <option value="">Todos los estados</option>
         <option value="Pendiente">Pendiente</option>
         <option value="Realizado">Realizado</option>
         <option value="Facturado">Facturado</option>
       </select>
-      <input type="month" id="hf-mes" onchange="renderHist()" placeholder="Mes">
+      <input type="month" id="hf-mes" onchange="renderHist()">
       <button class="btn btn-sm" onclick="loadViajes(true)">↺ Actualizar</button>
       <button class="btn btn-sm" onclick="exportCSV()">↓ Exportar CSV</button>
     </div>
-
     <div id="hist-state" class="loading"><span class="spinner"></span>Cargando viajes...</div>
     <div id="hist-table" style="display:none">
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>Fecha</th><th>Cliente</th><th>Ruta</th><th>Vehículo</th>
-              <th>Chofer</th><th>Patente</th><th>Remito</th><th>Km</th><th>Valor</th><th>Estado</th>
-            </tr>
-          </thead>
+          <thead><tr>
+            <th>Fecha</th><th>Cliente</th><th>Ruta</th><th>Vehículo</th>
+            <th>Fletero</th><th>Km</th><th>Ingreso</th><th>Costo flet.</th><th>Margen</th><th>Estado</th>
+          </tr></thead>
           <tbody id="hist-body"></tbody>
         </table>
       </div>
@@ -269,299 +216,294 @@ tr:hover td { background: var(--bg2); }
     <div id="hist-empty" class="empty" style="display:none">No hay viajes para los filtros seleccionados.</div>
   </div>
 
+  <!-- ═══ LIQUIDACIÓN ════════════════════════════════════════════════════════ -->
+  <div id="panel-liquidacion" class="panel">
+    <div class="liq-header">
+      <div class="sec-title" style="border:none;margin:0 0 12px;padding:0">Generar liquidación</div>
+      <div class="liq-filters">
+        <div class="field"><label>Fletero</label>
+          <select id="lf-fle">
+            <option value="">— Seleccionar fletero —</option>
+            <option>Brizuela Anibal</option>
+            <option>Ojeda Carlos</option>
+            <option>Scarimbolo Juan</option>
+            <option>Sandoval Gonzalo</option>
+          </select></div>
+        <div class="field"><label>Mes</label>
+          <input type="month" id="lf-mes"></div>
+        <div>
+          <button class="btn btn-primary" onclick="generarLiq()">Ver liquidación</button>
+        </div>
+      </div>
+      <div class="liq-total" id="liq-total" style="display:none">
+        <div class="liq-tot-item"><div class="liq-tot-val" id="lt-n">0</div><div class="liq-tot-lbl">Viajes</div></div>
+        <div class="liq-tot-item"><div class="liq-tot-val sv-blue" id="lt-ing">$0</div><div class="liq-tot-lbl">Total facturado</div></div>
+        <div class="liq-tot-item"><div class="liq-tot-val sv-red" id="lt-cost">$0</div><div class="liq-tot-lbl">A pagar al fletero</div></div>
+        <div class="liq-tot-item"><div class="liq-tot-val sv-green" id="lt-mg">$0</div><div class="liq-tot-lbl">Margen neto</div></div>
+      </div>
+    </div>
+    <div id="liq-area"></div>
+  </div>
+
   <!-- ═══ TARIFAS ════════════════════════════════════════════════════════════ -->
   <div id="panel-tarifas" class="panel">
     <div id="alert-tarifas"></div>
-    <div id="upload-area" class="upload-zone" onclick="document.getElementById('csv-in').click()">
-      <input type="file" id="csv-in" accept=".csv" onchange="loadCSV(this)">
-      <div style="font-size:22px;margin-bottom:8px">↑</div>
-      <strong style="font-size:14px">Subir tarifas actualizadas</strong>
-      <div style="font-size:12px;color:var(--text2);margin-top:5px">Archivo CSV con columnas: Cliente · Origen · Destino · Vehiculo · KmMin · KmMax · Base · PorKm · Vigencia</div>
-    </div>
-    <div id="file-ok-bar" class="file-ok-bar" style="display:none">
-      <span>✓</span><span id="fname">Tarifas cargadas</span>
-      <button class="btn btn-sm" style="margin-left:auto" onclick="document.getElementById('csv-in').click()">Reemplazar archivo</button>
-    </div>
-
-    <div class="stats cols3">
-      <div class="stat"><div class="stat-val" id="ts-cli">—</div><div class="stat-lbl">Clientes</div></div>
-      <div class="stat"><div class="stat-val sv-teal" id="ts-act">—</div><div class="stat-lbl">Tarifas vigentes</div></div>
-      <div class="stat"><div class="stat-val sv-amber" id="ts-alerta">—</div><div class="stat-lbl">Por vencer / vencidas</div></div>
-    </div>
-
-    <div id="tar-wrap" style="display:none">
-      <div class="filters">
-        <select id="tf-cli" onchange="renderTarifas()"><option value="">Todos los clientes</option></select>
-        <select id="tf-est" onchange="renderTarifas()">
-          <option value="">Todos los estados</option>
-          <option value="ok">Vigentes</option>
-          <option value="warn">Por vencer</option>
-          <option value="exp">Vencidas</option>
-        </select>
+    <div class="tar-sections">
+      <!-- Tarifas clientes -->
+      <div class="tar-sec">
+        <div class="tar-sec-title">Tarifas — lo que cobramos a clientes</div>
+        <div id="ua-cli" class="upload-zone" onclick="document.getElementById('csv-cli').click()">
+          <input type="file" id="csv-cli" accept=".csv" onchange="loadCSV(this,'cli')">
+          <div style="font-size:20px;margin-bottom:6px">↑</div>
+          <strong style="font-size:13px">Subir tarifas de clientes</strong>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px">CSV: Cliente · Origen · Destino · Vehiculo · KmMin · KmMax · Base · PorKm · Vigencia</div>
+        </div>
+        <div id="ok-cli" class="file-ok-bar" style="display:none">
+          <span>✓</span><span id="fn-cli"></span>
+          <button class="btn btn-sm" style="margin-left:auto" onclick="document.getElementById('csv-cli').click()">Reemplazar</button>
+        </div>
+        <div class="stats c3" style="margin-bottom:0">
+          <div class="stat"><div class="stat-val" id="ts-cli">—</div><div class="stat-lbl">Clientes</div></div>
+          <div class="stat"><div class="stat-val sv-teal" id="ts-act">—</div><div class="stat-lbl">Tarifas vigentes</div></div>
+          <div class="stat"><div class="stat-val sv-amber" id="ts-alerta">—</div><div class="stat-lbl">Por vencer/vencidas</div></div>
+        </div>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Cliente</th><th>Origen</th><th>Destino</th><th>Vehículo</th>
-              <th>Km rango</th><th>Tarifa base</th><th>+ por km</th><th>Vigencia</th>
-            </tr>
-          </thead>
-          <tbody id="tar-body"></tbody>
-        </table>
+      <!-- Tarifas fleteros -->
+      <div class="tar-sec">
+        <div class="tar-sec-title">Tarifas — lo que pagamos a fleteros</div>
+        <div id="ua-fle" class="upload-zone" onclick="document.getElementById('csv-fle').click()">
+          <input type="file" id="csv-fle" accept=".csv" onchange="loadCSV(this,'fle')">
+          <div style="font-size:20px;margin-bottom:6px">↑</div>
+          <strong style="font-size:13px">Subir tarifas de fleteros</strong>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px">Mismo formato CSV · Solo rutas Femsa, Alpla, Syphon, Andina</div>
+        </div>
+        <div id="ok-fle" class="file-ok-bar" style="display:none">
+          <span>✓</span><span id="fn-fle"></span>
+          <button class="btn btn-sm" style="margin-left:auto" onclick="document.getElementById('csv-fle').click()">Reemplazar</button>
+        </div>
+        <div class="stats c3" style="margin-bottom:0">
+          <div class="stat"><div class="stat-val" id="tf-cli">—</div><div class="stat-lbl">Clientes</div></div>
+          <div class="stat"><div class="stat-val sv-teal" id="tf-act">—</div><div class="stat-lbl">Rutas cargadas</div></div>
+          <div class="stat"><div class="stat-val sv-amber" id="tf-alerta">—</div><div class="stat-lbl">Por vencer/vencidas</div></div>
+        </div>
       </div>
     </div>
     <p class="hint" style="margin-top:10px">Las tarifas vencidas no se aplican al calcular nuevos viajes. Actualizá el CSV para renovarlas.</p>
   </div>
-
 </main>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════════════
-//  CONFIGURACIÓN — Reemplazá esta URL con la de tu Google Apps Script
-// ═══════════════════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbzCzRIE8oZfzmaC_SvoUKO3YZ2_uqAZ3rKspjg5NavpIOevtOVR3Mi0MfSlgNg3dYoK/exec';
+// ════════════════════════════════════════════════════════════════════════════
+//  CONFIGURACIÓN
+// ════════════════════════════════════════════════════════════════════════════
+const API_URL = 'REEMPLAZAR_CON_TU_URL_DE_APPS_SCRIPT';
+const FLETERO_CLIENTS = ['Femsa','Alpla','Syphon','Andina'];
 
-// ═══════════════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════════
 //  ESTADO
-// ═══════════════════════════════════════════════════════════════════════════
-let tarifas = [];
-let viajes  = [];
-let viajesLoaded = false;
+// ════════════════════════════════════════════════════════════════════════════
+let tarifas = [], tarifasFle = [], viajes = [], viajesLoaded = false;
 
-// ═══════════════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════════
 //  UTILS
-// ═══════════════════════════════════════════════════════════════════════════
-const fmt = n => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(+n || 0);
+// ════════════════════════════════════════════════════════════════════════════
+const fmt = n => new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:0}).format(+n||0);
 const today = () => new Date().toISOString().split('T')[0];
-const daysTo = d => d ? Math.round((new Date(d) - new Date()) / 86400000) : -999;
+const todayMonth = () => today().slice(0,7);
+const daysTo = d => d ? Math.round((new Date(d)-new Date())/86400000) : -999;
 const g = id => document.getElementById(id);
 
-function fmtDate(s) {
-  if (!s) return '—';
-  const str = String(s);
-  if (str.includes('/')) return str;
-  const [y, m, d] = str.split('-');
-  return (d && m && y) ? `${d}/${m}/${y}` : str;
+function fmtDate(s){
+  if(!s) return '—';
+  const str=String(s);
+  if(str.includes('/')) return str;
+  const [y,m,d]=str.split('-');
+  return (d&&m&&y)?`${d}/${m}/${y}`:str;
 }
 
-function rateStatus(r) {
-  const v = r.Vigencia || r.vigencia;
-  const d = daysTo(v);
-  if (d < 0) return 'exp';
-  if (d <= 30) return 'warn';
-  return 'ok';
+function rateStatus(r){
+  const v=r.Vigencia||r.vigencia;
+  const d=daysTo(v);
+  if(d<0) return 'exp'; if(d<=30) return 'warn'; return 'ok';
 }
 
-function val(r, ...keys) {
-  for (const k of keys) { if (r[k] !== undefined && r[k] !== '') return r[k]; }
-  return '';
+function val(r,...keys){
+  for(const k of keys){ if(r[k]!==undefined&&r[k]!=='') return r[k]; } return '';
 }
 
-async function apiCall(params) {
-  if (API_URL.includes('REEMPLAZAR')) {
-    g('config-banner').style.display = 'block';
-    throw new Error('URL no configurada');
-  }
-  const url = `${API_URL}?${new URLSearchParams(params)}`;
-  const resp = await fetch(url, { redirect: 'follow' });
-  const json = await resp.json();
-  if (json.error) throw new Error(json.error);
+async function apiCall(params){
+  if(API_URL.includes('REEMPLAZAR')){ g('config-banner').style.display='block'; throw new Error('URL no configurada'); }
+  const url=`${API_URL}?${new URLSearchParams(params)}`;
+  const resp=await fetch(url,{redirect:'follow'});
+  const json=await resp.json();
+  if(json.error) throw new Error(json.error);
   return json;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════════
 //  TABS
-// ═══════════════════════════════════════════════════════════════════════════
-function go(tab) {
-  ['viaje', 'historial', 'tarifas'].forEach((t, i) => {
-    document.querySelectorAll('.tab')[i].classList.toggle('active', t === tab);
-    g(`panel-${t}`).classList.toggle('active', t === tab);
+// ════════════════════════════════════════════════════════════════════════════
+function go(tab){
+  ['viaje','historial','liquidacion','tarifas'].forEach((t,i)=>{
+    document.querySelectorAll('.tab')[i].classList.toggle('active',t===tab);
+    g(`panel-${t}`).classList.toggle('active',t===tab);
   });
-  if (tab === 'historial' && !viajesLoaded) loadViajes();
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  TARIFAS
-// ═══════════════════════════════════════════════════════════════════════════
-async function loadTarifas() {
-  try {
-    const data = await apiCall({ action: 'getTarifas' });
-    if (Array.isArray(data) && data.length > 0) {
-      tarifas = data;
-      g('upload-area').style.display = 'none';
-      g('file-ok-bar').style.display = 'flex';
-      g('fname').textContent = `${tarifas.length} tarifas cargadas desde Sheets`;
-      g('tar-wrap').style.display = 'block';
-      refreshTarifaStats();
-      populateFormSelects();
-      populateTarFilter();
-    }
-  } catch (e) {
-    if (!API_URL.includes('REEMPLAZAR')) console.warn('Sin tarifas en Sheets:', e.message);
+  if(tab==='historial'&&!viajesLoaded) loadViajes();
+  if(tab==='liquidacion'){
+    if(!viajesLoaded) loadViajes();
+    if(!g('lf-mes').value) g('lf-mes').value=todayMonth();
   }
 }
 
-function refreshTarifaStats() {
-  const clientes = [...new Set(tarifas.map(r => val(r, 'Cliente', 'cliente')))].filter(Boolean);
-  const activas  = tarifas.filter(r => rateStatus(r) === 'ok').length;
-  const alertas  = tarifas.filter(r => rateStatus(r) !== 'ok').length;
-  g('ts-cli').textContent    = clientes.length;
-  g('ts-act').textContent    = activas;
-  g('ts-alerta').textContent = alertas;
+// ════════════════════════════════════════════════════════════════════════════
+//  TARIFAS
+// ════════════════════════════════════════════════════════════════════════════
+function matchTarifa(arr, cli, veh, ori, dst, km){
+  return arr.find(r=>
+    val(r,'Cliente','cliente')===cli &&
+    val(r,'Vehiculo','vehiculo')===veh &&
+    val(r,'Origen','origen')===ori &&
+    val(r,'Destino','destino')===dst &&
+    rateStatus(r)!=='exp' &&
+    km>=+(val(r,'KmMin','kmMin')||0) &&
+    km<=+(val(r,'KmMax','kmMax')||9999)
+  );
 }
 
-function populateTarFilter() {
-  const clientes = [...new Set(tarifas.map(r => val(r, 'Cliente', 'cliente')))].filter(Boolean);
-  g('tf-cli').innerHTML = '<option value="">Todos los clientes</option>' + clientes.map(c => `<option>${c}</option>`).join('');
+async function loadTarifas(){
+  try {
+    const [cli, fle] = await Promise.all([
+      apiCall({action:'getTarifas'}),
+      apiCall({action:'getTarifasFleteros'})
+    ]);
+    if(Array.isArray(cli)&&cli.length){ tarifas=cli; applyTarifaStats('cli',tarifas); g('ua-cli').style.display='none'; g('ok-cli').style.display='flex'; g('fn-cli').textContent=`${cli.length} tarifas desde Sheets`; populateFormSelects(); }
+    if(Array.isArray(fle)&&fle.length){ tarifasFle=fle; applyTarifaStats('fle',tarifasFle); g('ua-fle').style.display='none'; g('ok-fle').style.display='flex'; g('fn-fle').textContent=`${fle.length} tarifas desde Sheets`; }
+  } catch(e){ if(!API_URL.includes('REEMPLAZAR')) console.warn('Sin tarifas:', e.message); }
 }
 
-function renderTarifas() {
-  const fc  = g('tf-cli').value;
-  const fst = g('tf-est').value;
-  const filtered = tarifas.filter(r => {
-    if (fc && val(r, 'Cliente', 'cliente') !== fc) return false;
-    if (fst && rateStatus(r) !== fst) return false;
-    return true;
-  });
-  g('tar-body').innerHTML = filtered.map(r => {
-    const st = rateStatus(r);
-    const badge = st === 'exp'
-      ? '<span class="badge b-red">Vencida</span>'
-      : st === 'warn'
-        ? `<span class="badge b-amber">Vence en ${daysTo(val(r,'Vigencia','vigencia'))}d</span>`
-        : '<span class="badge b-teal">Vigente</span>';
-    return `<tr>
-      <td><span class="badge b-blue">${val(r,'Cliente','cliente')}</span></td>
-      <td>${val(r,'Origen','origen')}</td>
-      <td>${val(r,'Destino','destino')}</td>
-      <td>${val(r,'Vehiculo','vehiculo')}</td>
-      <td class="mono">${val(r,'KmMin','kmMin')}–${val(r,'KmMax','kmMax')} km</td>
-      <td class="mono">${fmt(val(r,'Base','base'))}</td>
-      <td class="mono">${fmt(val(r,'PorKm','porKm'))}/km</td>
-      <td>${badge}</td>
-    </tr>`;
-  }).join('') || '<tr><td colspan="8" style="text-align:center;padding:1.5rem;color:var(--text2)">Sin tarifas para este filtro</td></tr>';
+function applyTarifaStats(tipo, arr){
+  const prefix = tipo==='cli'?'ts':'tf';
+  const clientes=[...new Set(arr.map(r=>val(r,'Cliente','cliente')))].filter(Boolean);
+  const activas=arr.filter(r=>rateStatus(r)==='ok').length;
+  const alertas=arr.filter(r=>rateStatus(r)!=='ok').length;
+  g(`${prefix}-cli`).textContent=clientes.length;
+  g(`${prefix}-act`).textContent=activas;
+  g(`${prefix}-alerta`).textContent=alertas;
 }
 
-function loadCSV(input) {
-  const file = input.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async e => {
-    const lines = e.target.result.trim().split('\n').slice(1);
-    const parsed = lines.map(l => {
-      const c = l.split(',').map(s => s.trim().replace(/^"|"$/g, ''));
-      return { Cliente: c[0], Origen: c[1], Destino: c[2], Vehiculo: c[3], KmMin: +c[4], KmMax: +c[5], Base: +c[6], PorKm: +c[7], Vigencia: c[8] };
-    }).filter(r => r.Cliente);
-    if (!parsed.length) { showAlert('alert-tarifas', 'err', 'El archivo no tiene datos válidos. Verificá el formato.'); return; }
+function loadCSV(input, tipo){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    const lines=e.target.result.trim().split('\n').slice(1);
+    const parsed=lines.map(l=>{
+      const c=l.split(',').map(s=>s.trim().replace(/^"|"$/g,''));
+      return{Cliente:c[0],Origen:c[1],Destino:c[2],Vehiculo:c[3],KmMin:+c[4],KmMax:+c[5],Base:+c[6],PorKm:+c[7],Vigencia:c[8]};
+    }).filter(r=>r.Cliente);
+    if(!parsed.length){ showAlert('alert-tarifas','err','Archivo sin datos válidos.'); return; }
 
-    tarifas = parsed;
-    g('upload-area').style.display = 'none';
-    g('file-ok-bar').style.display = 'flex';
-    g('fname').textContent = `${file.name} · ${parsed.length} tarifas`;
-    g('tar-wrap').style.display = 'block';
-    refreshTarifaStats(); populateFormSelects(); populateTarFilter(); renderTarifas();
+    const action = tipo==='cli'?'saveTarifas':'saveTarifasFleteros';
+    const prefix = tipo==='cli'?'ua-cli':'ua-fle';
+    const okId   = tipo==='cli'?'ok-cli':'ok-fle';
+    const fnId   = tipo==='cli'?'fn-cli':'fn-fle';
+
+    if(tipo==='cli'){ tarifas=parsed; populateFormSelects(); }
+    else { tarifasFle=parsed; }
+
+    applyTarifaStats(tipo, parsed);
+    g(prefix).style.display='none';
+    g(okId).style.display='flex';
+    g(fnId).textContent=`${file.name} · ${parsed.length} tarifas`;
 
     try {
-      await apiCall({ action: 'saveTarifas', data: encodeURIComponent(JSON.stringify({ tarifas: parsed })) });
-      showAlert('alert-tarifas', 'ok', `✓ ${parsed.length} tarifas guardadas en Google Sheets.`);
-    } catch (err) {
-      showAlert('alert-tarifas', 'warn', 'Tarifas cargadas localmente, pero no se pudieron guardar en Sheets. Verificá la conexión.');
+      await apiCall({action, data: encodeURIComponent(JSON.stringify({tarifas:parsed}))});
+      showAlert('alert-tarifas','ok',`✓ ${parsed.length} tarifas guardadas en Google Sheets.`);
+    } catch(err){
+      showAlert('alert-tarifas','warn','Tarifas cargadas localmente. Error al guardar en Sheets.');
     }
   };
   reader.readAsText(file);
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  FORMULARIO VIAJE
-// ═══════════════════════════════════════════════════════════════════════════
-function populateFormSelects() {
-  const activas  = tarifas.filter(r => rateStatus(r) !== 'exp');
-  const clientes = [...new Set(activas.map(r => val(r, 'Cliente', 'cliente')))].filter(Boolean);
-  const prev = g('v-cli').value;
-  g('v-cli').innerHTML = '<option value="">— Seleccionar —</option>' + clientes.map(c => `<option ${c === prev ? 'selected' : ''}>${c}</option>`).join('');
-  if (!g('v-fecha').value) g('v-fecha').value = today();
+// ════════════════════════════════════════════════════════════════════════════
+//  FORMULARIO NUEVO VIAJE
+// ════════════════════════════════════════════════════════════════════════════
+function populateFormSelects(){
+  const activas=tarifas.filter(r=>rateStatus(r)!=='exp');
+  const clientes=[...new Set(activas.map(r=>val(r,'Cliente','cliente')))].filter(Boolean);
+  const prev=g('v-cli').value;
+  g('v-cli').innerHTML='<option value="">— Seleccionar —</option>'+clientes.map(c=>`<option ${c===prev?'selected':''}>${c}</option>`).join('');
+  if(!g('v-fecha').value) g('v-fecha').value=today();
   updOpts();
 }
 
-function updOpts() {
-  const cli     = g('v-cli').value;
-  const activas = tarifas.filter(r => val(r, 'Cliente', 'cliente') === cli && rateStatus(r) !== 'exp');
-  const vehs    = [...new Set(activas.map(r => val(r, 'Vehiculo', 'vehiculo')))].filter(Boolean);
-  const oris    = [...new Set(activas.map(r => val(r, 'Origen', 'origen')))].filter(Boolean);
-  const dsts    = [...new Set(activas.map(r => val(r, 'Destino', 'destino')))].filter(Boolean);
-  g('v-veh').innerHTML = '<option value="">— Seleccionar —</option>' + vehs.map(v => `<option>${v}</option>`).join('');
-  g('v-ori').innerHTML = '<option value="">— Seleccionar —</option>' + oris.map(v => `<option>${v}</option>`).join('');
-  g('v-dst').innerHTML = '<option value="">— Seleccionar —</option>' + dsts.map(v => `<option>${v}</option>`).join('');
+function updOpts(){
+  const cli=g('v-cli').value;
+  const activas=tarifas.filter(r=>val(r,'Cliente','cliente')===cli&&rateStatus(r)!=='exp');
+  const vehs=[...new Set(activas.map(r=>val(r,'Vehiculo','vehiculo')))].filter(Boolean);
+  const oris=[...new Set(activas.map(r=>val(r,'Origen','origen')))].filter(Boolean);
+  const dsts=[...new Set(activas.map(r=>val(r,'Destino','destino')))].filter(Boolean);
+  g('v-veh').innerHTML='<option value="">— Seleccionar —</option>'+vehs.map(v=>`<option>${v}</option>`).join('');
+  g('v-ori').innerHTML='<option value="">— Seleccionar —</option>'+oris.map(v=>`<option>${v}</option>`).join('');
+  g('v-dst').innerHTML='<option value="">— Seleccionar —</option>'+dsts.map(v=>`<option>${v}</option>`).join('');
+  // Mostrar sección fletero solo para clientes CD
+  g('fletero-sec').style.display=FLETERO_CLIENTS.includes(cli)?'block':'none';
+  g('v-fletero').value='';
 }
 
-function calcValor() {
-  const cli  = g('v-cli').value;
-  const veh  = g('v-veh').value;
-  const ori  = g('v-ori').value;
-  const dst  = g('v-dst').value;
-  const km   = parseFloat(g('v-km').value);
-  const area = g('valor-area');
-  const btn  = g('btn-guardar');
-  btn.disabled = true;
-  delete btn.dataset.total;
+function calcValor(){
+  const cli=g('v-cli').value, veh=g('v-veh').value;
+  const ori=g('v-ori').value, dst=g('v-dst').value;
+  const km=parseFloat(g('v-km').value);
+  const fletero=g('v-fletero').value;
+  const area=g('valor-area'), btn=g('btn-guardar');
+  btn.disabled=true; delete btn.dataset.total; delete btn.dataset.costFle;
+  if(!cli||!veh||!ori||!dst||isNaN(km)||km<=0){ area.innerHTML=''; return; }
 
-  if (!cli || !veh || !ori || !dst || isNaN(km) || km <= 0) { area.innerHTML = ''; return; }
-
-  // Buscar tarifa exacta
-  const match = tarifas.find(r =>
-    val(r, 'Cliente', 'cliente') === cli &&
-    val(r, 'Vehiculo', 'vehiculo') === veh &&
-    val(r, 'Origen', 'origen') === ori &&
-    val(r, 'Destino', 'destino') === dst &&
-    rateStatus(r) !== 'exp' &&
-    km >= +val(r, 'KmMin', 'kmMin') &&
-    km <= +val(r, 'KmMax', 'kmMax')
-  );
-
-  if (!match) {
-    const hayRuta = tarifas.some(r =>
-      val(r, 'Cliente', 'cliente') === cli &&
-      val(r, 'Origen', 'origen') === ori &&
-      val(r, 'Destino', 'destino') === dst
-    );
-    area.innerHTML = `<div class="warn-box warn-red">${hayRuta
-      ? `No hay tarifa para <strong>${Math.round(km)} km</strong> en esta ruta. Revisá los rangos configurados.`
-      : `No existe tarifa para ${cli} · ${ori} → ${dst}. Verificá el archivo de tarifas.`}</div>`;
+  const match=matchTarifa(tarifas,cli,veh,ori,dst,km);
+  if(!match){
+    const hayRuta=tarifas.some(r=>val(r,'Cliente','cliente')===cli&&val(r,'Origen','origen')===ori&&val(r,'Destino','destino')===dst);
+    area.innerHTML=`<div class="warn-box warn-red">${hayRuta?`No hay tarifa para ${Math.round(km)} km en esta ruta. Revisá los rangos.`:`No existe tarifa para ${cli} · ${ori} → ${dst}.`}</div>`;
     return;
   }
 
-  const st    = rateStatus(match);
-  const base  = +val(match, 'Base', 'base');
-  const porKm = +val(match, 'PorKm', 'porKm');
-  const varKm = Math.round(km * porKm);
-  const total = base + varKm;
-  btn.dataset.total = total;
-  btn.disabled = false;
+  const base=+(val(match,'Base','base')||0), porKm=+(val(match,'PorKm','porKm')||0);
+  const total=Math.round(base+km*porKm);
 
-  const warnHtml = st === 'warn'
-    ? `<div class="warn-box warn-amber" style="margin-top:10px">⚠ Esta tarifa vence el ${fmtDate(val(match,'Vigencia','vigencia'))}. Actualizala antes de esa fecha.</div>`
-    : '';
+  // Tarifa fletero
+  let costFle=0;
+  if(fletero && FLETERO_CLIENTS.includes(cli)){
+    const mFle=matchTarifa(tarifasFle,cli,veh,ori,dst,km);
+    if(mFle){
+      const bFle=+(val(mFle,'Base','base')||0), pkFle=+(val(mFle,'PorKm','porKm')||0);
+      costFle=Math.round(bFle+km*pkFle);
+    }
+  }
 
-  area.innerHTML = `<div class="valor-card">
-    <div class="valor-lbl">Valor calculado del viaje</div>
+  const margen=total-costFle;
+  btn.dataset.total=total; btn.dataset.costFle=costFle; btn.dataset.margen=margen;
+  btn.disabled=false;
+
+  const st=rateStatus(match);
+  const warnHtml=st==='warn'?`<div class="warn-box warn-amber" style="margin-top:10px">⚠ Esta tarifa vence el ${fmtDate(val(match,'Vigencia','vigencia'))}.</div>`:'';
+
+  area.innerHTML=`<div class="valor-card">
+    <div style="font-size:12px;color:var(--text2)">Valor calculado</div>
     <div class="valor-num">${fmt(total)}</div>
-    <div class="valor-breakdown">
-      <div class="vb-item">Tarifa base <strong>${fmt(base)}</strong></div>
-      <div class="vb-item">Variable: ${Math.round(km)} km × ${fmt(porKm)} = <strong>${fmt(varKm)}</strong></div>
-      <div class="vb-item">Rango aplicado: <strong>${val(match,'KmMin','kmMin')}–${val(match,'KmMax','kmMax')} km</strong></div>
+    <div class="valor-grid">
+      <div class="vg-item"><div class="vg-lbl">Ingreso (cliente)</div><div class="vg-val teal">${fmt(total)}</div></div>
+      <div class="vg-item"><div class="vg-lbl">Costo fletero</div><div class="vg-val red">${costFle>0?fmt(costFle):'—'}</div></div>
+      <div class="vg-item"><div class="vg-lbl">Margen</div><div class="vg-val ${margen>=0?'green':'red'}">${costFle>0?fmt(margen):'—'}</div></div>
     </div>
   </div>${warnHtml}`;
 }
 
-async function guardarViaje() {
-  const btn = g('btn-guardar');
-  if (!btn.dataset.total) return;
-  btn.disabled = true;
-  g('saving-msg').style.display = 'inline-flex';
-
-  const viaje = {
-    fecha:    g('v-fecha').value   || today(),
+async function guardarViaje(){
+  const btn=g('btn-guardar');
+  if(!btn.dataset.total) return;
+  btn.disabled=true; g('saving-msg').style.display='inline-flex';
+  const viaje={
+    fecha:    g('v-fecha').value||today(),
     cliente:  g('v-cli').value,
     origen:   g('v-ori').value,
     destino:  g('v-dst').value,
@@ -572,171 +514,217 @@ async function guardarViaje() {
     remito:   g('v-remito').value.trim(),
     valor:    +btn.dataset.total,
     estado:   g('v-estado').value,
+    fletero:  g('v-fletero').value||'',
+    tarifaFletero: +btn.dataset.costFle||0,
+    margen:   +btn.dataset.margen||+btn.dataset.total,
   };
-
   try {
-    const res = await apiCall({ action: 'addViaje', data: encodeURIComponent(JSON.stringify(viaje)) });
-    viaje.id = res.id;
-    viajes.unshift(viaje);
-    viajesLoaded = true;
-    actualizarBadgePendientes();
-    showAlert('alert-viaje', 'ok', `✓ Viaje guardado en Google Sheets correctamente.`);
+    const res=await apiCall({action:'addViaje', data:encodeURIComponent(JSON.stringify(viaje))});
+    viaje.id=res.id; viajes.unshift(viaje); viajesLoaded=true;
+    actualizarBadge();
+    showAlert('alert-viaje','ok','✓ Viaje guardado en Google Sheets correctamente.');
     limpiarForm();
-  } catch (e) {
-    showAlert('alert-viaje', 'err', `Error al guardar: ${e.message}`);
-    btn.disabled = false;
+  } catch(e){
+    showAlert('alert-viaje','err',`Error al guardar: ${e.message}`);
+    btn.disabled=false;
   }
-  g('saving-msg').style.display = 'none';
+  g('saving-msg').style.display='none';
 }
 
-function limpiarForm() {
-  ['v-cli','v-veh','v-ori','v-dst'].forEach(id => g(id).value = '');
-  ['v-km','v-chofer','v-patente','v-remito'].forEach(id => g(id).value = '');
-  g('v-estado').value = 'Pendiente';
-  g('v-fecha').value  = today();
-  g('valor-area').innerHTML = '';
-  g('btn-guardar').disabled = true;
+function limpiarForm(){
+  ['v-cli','v-veh','v-ori','v-dst','v-fletero'].forEach(id=>g(id).value='');
+  ['v-km','v-chofer','v-patente','v-remito'].forEach(id=>g(id).value='');
+  g('v-estado').value='Pendiente'; g('v-fecha').value=today();
+  g('valor-area').innerHTML=''; g('btn-guardar').disabled=true;
   delete g('btn-guardar').dataset.total;
-  updOpts();
+  g('fletero-sec').style.display='none'; updOpts();
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════════
 //  HISTORIAL
-// ═══════════════════════════════════════════════════════════════════════════
-async function loadViajes(force = false) {
-  if (viajesLoaded && !force) { renderHist(); return; }
-  g('hist-state').style.display = 'block';
-  g('hist-state').innerHTML     = '<span class="spinner"></span>Cargando desde Sheets...';
-  g('hist-table').style.display = 'none';
-  g('hist-empty').style.display = 'none';
-
+// ════════════════════════════════════════════════════════════════════════════
+async function loadViajes(force=false){
+  if(viajesLoaded&&!force){ renderHist(); return; }
+  g('hist-state').style.display='block';
+  g('hist-state').innerHTML='<span class="spinner"></span>Cargando desde Sheets...';
+  g('hist-table').style.display='none'; g('hist-empty').style.display='none';
   try {
-    const data = await apiCall({ action: 'getViajes' });
-    viajes = Array.isArray(data) ? data : [];
-    viajesLoaded = true;
-    poblarFiltrosHist();
-    actualizarBadgePendientes();
-    renderHist();
-  } catch (e) {
-    g('hist-state').innerHTML = `Error al cargar: ${e.message}`;
-  }
+    const data=await apiCall({action:'getViajes'});
+    viajes=Array.isArray(data)?data:[];
+    viajesLoaded=true; poblarFiltros(); actualizarBadge(); renderHist();
+  } catch(e){ g('hist-state').innerHTML=`Error: ${e.message}`; }
 }
 
-function poblarFiltrosHist() {
-  const clis = [...new Set(viajes.map(v => val(v,'cliente','Cliente')))].filter(Boolean);
-  const chos = [...new Set(viajes.map(v => val(v,'chofer','Chofer')))].filter(Boolean);
-  g('hf-cli').innerHTML = '<option value="">Todos los clientes</option>' + clis.map(c => `<option>${c}</option>`).join('');
-  g('hf-cho').innerHTML = '<option value="">Todos los choferes</option>' + chos.map(c => `<option>${c}</option>`).join('');
+function poblarFiltros(){
+  const clis=[...new Set(viajes.map(v=>val(v,'cliente','Cliente')))].filter(Boolean);
+  const fles=[...new Set(viajes.map(v=>val(v,'fletero','Fletero')))].filter(Boolean);
+  g('hf-cli').innerHTML='<option value="">Todos los clientes</option>'+clis.map(c=>`<option>${c}</option>`).join('');
+  g('hf-fle').innerHTML='<option value="">Todos los fleteros</option>'+fles.filter(f=>f&&f!=='').map(f=>`<option>${f}</option>`).join('');
 }
 
-function actualizarBadgePendientes() {
-  const n = viajes.filter(v => val(v,'estado','Estado') === 'Pendiente').length;
-  const b = g('badge-pend');
-  b.textContent    = n;
-  b.style.display  = n > 0 ? 'inline-block' : 'none';
+function actualizarBadge(){
+  const n=viajes.filter(v=>val(v,'estado','Estado')==='Pendiente').length;
+  g('badge-pend').textContent=n; g('badge-pend').style.display=n>0?'inline-block':'none';
 }
 
-function renderHist() {
-  const fc   = g('hf-cli').value;
-  const fch  = g('hf-cho').value;
-  const fest = g('hf-est').value;
-  const fmes = g('hf-mes').value;
-
-  const filtered = viajes.filter(v => {
-    if (fc   && val(v,'cliente','Cliente') !== fc)   return false;
-    if (fch  && val(v,'chofer','Chofer')   !== fch)  return false;
-    if (fest && val(v,'estado','Estado')   !== fest) return false;
-    if (fmes && !String(val(v,'fecha','Fecha')||'').startsWith(fmes)) return false;
+function renderHist(){
+  const fc=g('hf-cli').value, ff=g('hf-fle').value;
+  const fe=g('hf-est').value, fm=g('hf-mes').value;
+  const filtered=viajes.filter(v=>{
+    if(fc&&val(v,'cliente','Cliente')!==fc) return false;
+    if(ff&&val(v,'fletero','Fletero')!==ff) return false;
+    if(fe&&val(v,'estado','Estado')!==fe) return false;
+    if(fm&&!String(val(v,'fecha','Fecha')||'').startsWith(fm)) return false;
     return true;
   });
-
-  // Stats
-  const total    = filtered.reduce((s, v) => s + (+val(v,'valor','Valor')||0), 0);
-  const facturado = filtered.filter(v => val(v,'estado','Estado') === 'Facturado').reduce((s, v) => s + (+val(v,'valor','Valor')||0), 0);
-  const pendiente = filtered.filter(v => val(v,'estado','Estado') === 'Pendiente').reduce((s, v) => s + (+val(v,'valor','Valor')||0), 0);
-  g('hs-n').textContent    = filtered.length;
-  g('hs-fac').textContent  = filtered.length ? fmt(facturado) : '—';
-  g('hs-pend').textContent = filtered.length ? fmt(pendiente) : '—';
-  g('hs-prom').textContent = filtered.length ? fmt(Math.round(total / filtered.length)) : '—';
-
-  g('hist-state').style.display = 'none';
-
-  if (!filtered.length) {
-    g('hist-table').style.display = 'none';
-    g('hist-empty').style.display = 'block';
-    return;
-  }
-
-  g('hist-empty').style.display = 'none';
-  g('hist-table').style.display = 'block';
-
-  g('hist-body').innerHTML = filtered.map(v => {
-    const id  = val(v,'id','ID','_id') || Math.random();
-    const est = val(v,'estado','Estado') || 'Pendiente';
-    const cls = est.toLowerCase();
+  const total=filtered.reduce((s,v)=>s+(+val(v,'valor','Valor')||0),0);
+  const cost=filtered.reduce((s,v)=>s+(+val(v,'tarifaFletero','TarifaFletero')||0),0);
+  const margen=filtered.reduce((s,v)=>s+(+val(v,'margen','Margen')||0),0);
+  g('hs-n').textContent=filtered.length;
+  g('hs-fac').textContent=filtered.length?fmt(total):'—';
+  g('hs-cost').textContent=filtered.length&&cost>0?fmt(cost):'—';
+  g('hs-margen').textContent=filtered.length?fmt(margen):'—';
+  g('hist-state').style.display='none';
+  if(!filtered.length){ g('hist-table').style.display='none'; g('hist-empty').style.display='block'; return; }
+  g('hist-empty').style.display='none'; g('hist-table').style.display='block';
+  g('hist-body').innerHTML=filtered.map(v=>{
+    const id=val(v,'id','ID','_id')||Math.random();
+    const est=val(v,'estado','Estado')||'Pendiente';
+    const fle=val(v,'fletero','Fletero')||'';
+    const costFle=+val(v,'tarifaFletero','TarifaFletero')||0;
+    const mg=+val(v,'margen','Margen')||0;
     return `<tr>
       <td style="white-space:nowrap">${fmtDate(val(v,'fecha','Fecha'))}</td>
       <td><span class="badge b-blue">${val(v,'cliente','Cliente')}</span></td>
       <td style="white-space:nowrap">${val(v,'origen','Origen')} → ${val(v,'destino','Destino')}</td>
       <td>${val(v,'vehiculo','Vehiculo')}</td>
-      <td>${val(v,'chofer','Chofer')||'—'}</td>
-      <td class="mono">${val(v,'patente','Patente')||'—'}</td>
-      <td class="mono">${val(v,'remito','Remito')||'—'}</td>
+      <td>${fle?`<span class="badge b-gray">${fle}</span>`:'—'}</td>
       <td class="mono">${Math.round(+val(v,'km','Km')||0)}</td>
       <td class="mono">${fmt(val(v,'valor','Valor'))}</td>
-      <td>
-        <select class="est-sel ${cls}" data-id="${id}" onchange="cambiarEstado(this)">
-          <option ${est==='Pendiente'?'selected':''} value="Pendiente">Pendiente</option>
-          <option ${est==='Realizado'?'selected':''} value="Realizado">Realizado</option>
-          <option ${est==='Facturado'?'selected':''} value="Facturado">Facturado</option>
-        </select>
-      </td>
+      <td class="mono">${costFle>0?fmt(costFle):'—'}</td>
+      <td class="mono" style="color:${mg>=0?'var(--green-text)':'var(--red-text)'}">${fmt(mg)}</td>
+      <td><select class="est-sel ${est.toLowerCase()}" data-id="${id}" onchange="cambiarEstado(this)">
+        <option ${est==='Pendiente'?'selected':''} value="Pendiente">Pendiente</option>
+        <option ${est==='Realizado'?'selected':''} value="Realizado">Realizado</option>
+        <option ${est==='Facturado'?'selected':''} value="Facturado">Facturado</option>
+      </select></td>
     </tr>`;
   }).join('');
 }
 
-async function cambiarEstado(sel) {
-  const id    = sel.dataset.id;
-  const nuevo = sel.value;
-  sel.className = `est-sel ${nuevo.toLowerCase()}`;
-  const v = viajes.find(v => String(val(v,'id','ID','_id')) === String(id));
-  if (v) { v.estado = nuevo; v.Estado = nuevo; }
-  actualizarBadgePendientes();
-  try {
-    await apiCall({ action: 'updateEstado', data: encodeURIComponent(JSON.stringify({ id, estado: nuevo })) });
-  } catch (e) {
-    console.warn('No se pudo actualizar el estado en Sheets');
+async function cambiarEstado(sel){
+  const id=sel.dataset.id, nuevo=sel.value;
+  sel.className=`est-sel ${nuevo.toLowerCase()}`;
+  const v=viajes.find(v=>String(val(v,'id','ID','_id'))===String(id));
+  if(v){v.estado=nuevo;v.Estado=nuevo;} actualizarBadge();
+  try{ await apiCall({action:'updateEstado', data:encodeURIComponent(JSON.stringify({id,estado:nuevo}))}); }
+  catch(e){ console.warn('No se pudo actualizar el estado'); }
+}
+
+function exportCSV(){
+  if(!viajes.length){ alert('No hay viajes para exportar.'); return; }
+  const head='Fecha,Cliente,Origen,Destino,Vehiculo,Fletero,Km,Valor,CostoFletero,Margen,Estado,Chofer,Patente,Remito';
+  const rows=viajes.map(v=>[
+    val(v,'fecha','Fecha'),val(v,'cliente','Cliente'),val(v,'origen','Origen'),val(v,'destino','Destino'),
+    val(v,'vehiculo','Vehiculo'),val(v,'fletero','Fletero')||'',val(v,'km','Km'),val(v,'valor','Valor'),
+    val(v,'tarifaFletero','TarifaFletero')||0,val(v,'margen','Margen')||0,val(v,'estado','Estado'),
+    val(v,'chofer','Chofer')||'',val(v,'patente','Patente')||'',val(v,'remito','Remito')||''
+  ].map(x=>`"${x}"`).join(','));
+  const blob=new Blob([head+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`viajes_${today()}.csv`; a.click();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  LIQUIDACIÓN
+// ════════════════════════════════════════════════════════════════════════════
+function generarLiq(){
+  const fle=g('lf-fle').value, mes=g('lf-mes').value;
+  const area=g('liq-area');
+  if(!fle){ area.innerHTML='<div class="alert alert-warn">Seleccioná un fletero para generar la liquidación.</div>'; return; }
+  if(!mes){ area.innerHTML='<div class="alert alert-warn">Seleccioná el mes para la liquidación.</div>'; return; }
+  if(!viajesLoaded){ area.innerHTML='<div class="loading"><span class="spinner"></span>Cargando datos...</div>'; loadViajes().then(()=>generarLiq()); return; }
+
+  const filtrados=viajes.filter(v=>val(v,'fletero','Fletero')===fle&&String(val(v,'fecha','Fecha')||'').startsWith(mes));
+  const ing=filtrados.reduce((s,v)=>s+(+val(v,'valor','Valor')||0),0);
+  const cost=filtrados.reduce((s,v)=>s+(+val(v,'tarifaFletero','TarifaFletero')||0),0);
+  const mg=filtrados.reduce((s,v)=>s+(+val(v,'margen','Margen')||0),0);
+
+  g('lt-n').textContent=filtrados.length;
+  g('lt-ing').textContent=fmt(ing);
+  g('lt-cost').textContent=fmt(cost);
+  g('lt-mg').textContent=fmt(mg);
+  g('liq-total').style.display=filtrados.length?'grid':'none';
+
+  if(!filtrados.length){
+    area.innerHTML='<div class="empty">No hay viajes para este fletero en el período seleccionado.</div>';
+    return;
   }
+
+  const [y,m]=mes.split('-');
+  const mesNombre=new Date(+y,+m-1,1).toLocaleDateString('es-AR',{month:'long',year:'numeric'});
+  area.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <div style="font-size:15px;font-weight:500">${fle} · ${mesNombre}</div>
+      <button class="btn btn-sm" onclick="exportLiq('${fle}','${mes}')">↓ Exportar liquidación</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Fecha</th><th>Cliente</th><th>Ruta</th><th>Vehículo</th>
+          <th>Km</th><th>Ingreso</th><th>A pagar</th><th>Margen</th>
+        </tr></thead>
+        <tbody>
+          ${filtrados.map(v=>`<tr>
+            <td>${fmtDate(val(v,'fecha','Fecha'))}</td>
+            <td><span class="badge b-blue">${val(v,'cliente','Cliente')}</span></td>
+            <td>${val(v,'origen','Origen')} → ${val(v,'destino','Destino')}</td>
+            <td>${val(v,'vehiculo','Vehiculo')}</td>
+            <td class="mono">${Math.round(+val(v,'km','Km')||0)}</td>
+            <td class="mono sv-blue">${fmt(val(v,'valor','Valor'))}</td>
+            <td class="mono sv-red"><strong>${fmt(val(v,'tarifaFletero','TarifaFletero')||0)}</strong></td>
+            <td class="mono sv-green">${fmt(val(v,'margen','Margen')||0)}</td>
+          </tr>`).join('')}
+          <tr style="background:var(--bg2)">
+            <td colspan="5" style="font-weight:500;font-size:12px">TOTAL</td>
+            <td class="mono" style="font-weight:500">${fmt(ing)}</td>
+            <td class="mono" style="font-weight:500;color:var(--red-text)">${fmt(cost)}</td>
+            <td class="mono" style="font-weight:500;color:var(--green-text)">${fmt(mg)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>`;
 }
 
-function exportCSV() {
-  const filtered = viajes; // exporta todo
-  if (!filtered.length) { alert('No hay viajes para exportar.'); return; }
-  const cols = ['fecha','cliente','origen','destino','vehiculo','chofer','patente','remito','km','valor','estado'];
-  const head = 'Fecha,Cliente,Origen,Destino,Vehiculo,Chofer,Patente,Remito,Km,Valor ARS,Estado';
-  const rows = filtered.map(v => cols.map(k => `"${val(v, k, k.charAt(0).toUpperCase()+k.slice(1)) || ''}"`).join(','));
-  const blob = new Blob([head + '\n' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `viajes_${today()}.csv`;
-  a.click();
+function exportLiq(fle, mes){
+  const filtrados=viajes.filter(v=>val(v,'fletero','Fletero')===fle&&String(val(v,'fecha','Fecha')||'').startsWith(mes));
+  if(!filtrados.length) return;
+  const head='Fecha,Cliente,Origen,Destino,Vehiculo,Km,Ingreso ARS,A Pagar ARS,Margen ARS';
+  const rows=filtrados.map(v=>[
+    val(v,'fecha','Fecha'),val(v,'cliente','Cliente'),val(v,'origen','Origen'),val(v,'destino','Destino'),
+    val(v,'vehiculo','Vehiculo'),val(v,'km','Km'),val(v,'valor','Valor'),
+    val(v,'tarifaFletero','TarifaFletero')||0,val(v,'margen','Margen')||0
+  ].map(x=>`"${x}"`).join(','));
+  const blob=new Blob([head+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`liquidacion_${fle.split(' ')[0]}_${mes}.csv`; a.click();
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════════
 //  ALERTS
-// ═══════════════════════════════════════════════════════════════════════════
-function showAlert(id, type, msg) {
-  const map = { ok: 'alert-ok', err: 'alert-err', warn: 'alert-warn' };
-  g(id).innerHTML = `<div class="alert ${map[type]||'alert-warn'}">${msg}</div>`;
-  setTimeout(() => { if (g(id)) g(id).innerHTML = ''; }, 5000);
+// ════════════════════════════════════════════════════════════════════════════
+function showAlert(id,type,msg){
+  const map={ok:'alert-ok',err:'alert-err',warn:'alert-warn'};
+  g(id).innerHTML=`<div class="alert ${map[type]||'alert-warn'}">${msg}</div>`;
+  setTimeout(()=>{ if(g(id)) g(id).innerHTML=''; },5000);
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════════
 //  INIT
-// ═══════════════════════════════════════════════════════════════════════════
-g('header-date').textContent = new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
-g('v-fecha').value = today();
-if (API_URL.includes('REEMPLAZAR')) g('config-banner').style.display = 'block';
+// ════════════════════════════════════════════════════════════════════════════
+g('header-date').textContent=new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
+g('v-fecha').value=today();
+if(API_URL.includes('REEMPLAZAR')) g('config-banner').style.display='block';
 loadTarifas();
 </script>
 </body>

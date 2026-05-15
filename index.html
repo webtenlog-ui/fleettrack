@@ -3,66 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FleetTrack · Gestión de Viajes</title>
+<title>FleetTrack · Control de Tráfico</title>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:#fff; --bg2:#f8f7f4; --bg3:#f1efe8;
-  --text:#1a1917; --text2:#5f5e5a; --text3:#888780;
-  --border:rgba(0,0,0,0.13); --border2:rgba(0,0,0,0.07);
-  --blue-bg:#E6F1FB; --blue-text:#0C447C; --blue:#378ADD;
-  --teal-bg:#E1F5EE; --teal-text:#085041; --teal:#1D9E75;
-  --amber-bg:#FAEEDA; --amber-text:#633806; --amber:#BA7517;
-  --red-bg:#FCEBEB; --red-text:#791F1F;
-  --green-bg:#EAF3DE; --green-text:#27500A;
-  --gray-bg:#F1EFE8; --gray-text:#444441;
-  --r:8px; --rl:12px;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fff;--bg2:#f8f7f4;--bg3:#f1efe8;
+  --text:#1a1917;--text2:#5f5e5a;--text3:#888780;
+  --border:rgba(0,0,0,0.13);--border2:rgba(0,0,0,0.07);
+  --blue-bg:#E6F1FB;--blue-text:#0C447C;--blue:#378ADD;
+  --teal-bg:#E1F5EE;--teal-text:#085041;--teal:#1D9E75;
+  --amber-bg:#FAEEDA;--amber-text:#633806;--amber:#BA7517;
+  --red-bg:#FCEBEB;--red-text:#791F1F;
+  --green-bg:#EAF3DE;--green-text:#27500A;
+  --gray-bg:#F1EFE8;--gray-text:#444441;
+  --purple-bg:#EEEDFE;--purple-text:#3C3489;
+  --r:8px;--rl:12px;
   --font:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,sans-serif;
   --mono:'SF Mono','Roboto Mono','Consolas',monospace;
 }
 body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg3);min-height:100vh}
+
+/* ── LOGIN ── */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg3)}
+.login-card{background:var(--bg);border-radius:var(--rl);border:0.5px solid var(--border);padding:2.5rem;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:2rem}
+.login-dot{width:10px;height:10px;background:var(--teal);border-radius:50%}
+.login-title{font-size:18px;font-weight:500}
+.login-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.login-field{margin-bottom:12px}
+.login-field label{display:block;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--text2);margin-bottom:5px}
+.login-field input{width:100%;padding:10px 12px;border:0.5px solid var(--border);border-radius:var(--r);font-size:14px;font-family:var(--font);color:var(--text);background:var(--bg)}
+.login-field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(55,138,221,.12)}
+.login-btn{width:100%;padding:11px;background:var(--text);color:var(--bg);border:none;border-radius:var(--r);font-size:14px;font-weight:500;font-family:var(--font);cursor:pointer;margin-top:8px;transition:opacity .15s}
+.login-btn:hover{opacity:.85}.login-btn:disabled{opacity:.4;cursor:not-allowed}
+.login-err{background:var(--red-bg);color:var(--red-text);padding:9px 12px;border-radius:var(--r);font-size:13px;margin-top:10px;display:none}
+
+/* ── MAIN APP ── */
+.app-wrap{display:none}
 .header{background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200}
 .logo{font-size:15px;font-weight:500;display:flex;align-items:center;gap:8px}
 .logo-dot{width:8px;height:8px;background:var(--teal);border-radius:50%}
-.header-right{font-size:12px;color:var(--text2)}
-.main{max-width:1160px;margin:0 auto;padding:1.5rem}
+.header-right{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--text2)}
+.header-user{font-weight:500;color:var(--text)}
+.logout-btn{padding:5px 10px;border-radius:var(--r);border:0.5px solid var(--border);background:none;font-size:12px;font-family:var(--font);cursor:pointer;color:var(--text2)}
+.logout-btn:hover{background:var(--bg2)}
+.main{max-width:1180px;margin:0 auto;padding:1.5rem}
 .tabs{display:flex;background:var(--bg);border-radius:var(--rl) var(--rl) 0 0;border:0.5px solid var(--border);border-bottom:none;padding:0 1.5rem}
-.tab{padding:13px 16px;font-size:13px;color:var(--text2);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-0.5px;font-family:var(--font);transition:color .12s}
+.tab{padding:13px 16px;font-size:13px;color:var(--text2);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-0.5px;font-family:var(--font)}
 .tab:hover{color:var(--text)}.tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}
 .tab-badge{display:inline-block;background:var(--amber-bg);color:var(--amber-text);font-size:10px;font-weight:600;padding:1px 5px;border-radius:99px;margin-left:4px;vertical-align:middle}
 .panel{background:var(--bg);border-radius:0 0 var(--rl) var(--rl);border:0.5px solid var(--border);border-top:none;padding:1.5rem;display:none}
 .panel.active{display:block}
+
+/* ── STATS ── */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
 .stats.c3{grid-template-columns:repeat(3,1fr)}.stats.c5{grid-template-columns:repeat(5,1fr)}
 .stat{background:var(--bg2);border-radius:var(--r);padding:14px 16px}
 .stat-val{font-size:20px;font-weight:500;font-family:var(--mono)}
 .stat-lbl{font-size:11px;color:var(--text2);margin-top:3px}
 .sv-blue{color:var(--blue-text)}.sv-amber{color:var(--amber)}.sv-teal{color:var(--teal)}.sv-red{color:var(--red-text)}.sv-green{color:var(--green-text)}
+
+/* ── FORM ── */
 .sec-title{font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid var(--border2)}
 .form-sec{margin-bottom:1.5rem}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fg.g3{grid-template-columns:1fr 1fr 1fr}.fg.g1{grid-template-columns:1fr}
+.fg.g3{grid-template-columns:1fr 1fr 1fr}.fg.g4{grid-template-columns:repeat(4,1fr)}.fg.g1{grid-template-columns:1fr}
 .full{grid-column:1/-1}
 .field{display:flex;flex-direction:column;gap:4px}
 label{font-size:11px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:.03em}
-input,select{padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--r);font-size:13px;font-family:var(--font);color:var(--text);background:var(--bg);width:100%;transition:border-color .15s;-webkit-appearance:none}
-input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(55,138,221,.12)}
-input::placeholder{color:var(--text3)}
+input,select,textarea{padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--r);font-size:13px;font-family:var(--font);color:var(--text);background:var(--bg);width:100%;transition:border-color .15s;-webkit-appearance:none}
+textarea{resize:vertical;min-height:60px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(55,138,221,.12)}
+input::placeholder,textarea::placeholder{color:var(--text3)}
+input.err,select.err{border-color:var(--red-text)!important}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
 
-/* ── AUTOCOMPLETE ─────────────────────────────────────────────────────────── */
+/* ── TIPO VIAJE TOGGLE ── */
+.tipo-toggle{display:flex;gap:6px;margin-top:2px}
+.tipo-btn{flex:1;padding:7px;border-radius:var(--r);border:0.5px solid var(--border);background:none;font-size:12px;font-weight:500;font-family:var(--font);cursor:pointer;transition:all .12s;color:var(--text2)}
+.tipo-btn.cd.active{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue)}
+.tipo-btn.ld.active{background:var(--purple-bg);color:var(--purple-text);border-color:#A09CE0}
+.tipo-badge{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:var(--r);font-size:12px;font-weight:500;margin-top:2px}
+.badge-cd{background:var(--blue-bg);color:var(--blue-text)}
+.badge-ld{background:var(--purple-bg);color:var(--purple-text)}
+.incr-alert{background:var(--amber-bg);border:0.5px solid #FAC775;border-radius:var(--r);padding:7px 10px;font-size:12px;color:var(--amber-text);margin-top:6px;display:none}
+
+/* ── AUTOCOMPLETE ── */
 .ac-wrap{position:relative}
 .ac-drop{position:absolute;top:calc(100% + 2px);left:0;right:0;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);z-index:150;max-height:230px;overflow-y:auto;display:none;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
 .ac-item{padding:8px 12px;font-size:13px;cursor:pointer;border-bottom:0.5px solid var(--border2);display:flex;align-items:center;gap:8px}
-.ac-item:last-child{border-bottom:none}
-.ac-item:hover{background:var(--bg2)}
-.ac-dot-route{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0}
-.ac-dot-city{width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.ac-item:last-child{border-bottom:none}.ac-item:hover{background:var(--bg2)}
+.ac-dot-r{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0}
+.ac-dot-c{width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0}
 .ac-prov{font-size:11px;color:var(--text3);margin-left:auto}
 .ac-sep{padding:4px 12px;font-size:10px;font-weight:600;text-transform:uppercase;color:var(--text3);background:var(--bg2);letter-spacing:.06em;border-bottom:0.5px solid var(--border2)}
 .ac-empty{padding:10px 12px;font-size:13px;color:var(--text3);font-style:italic}
-/* ─────────────────────────────────────────────────────────────────────────── */
 
+/* ── SI/NO TOGGLES ── */
+.sino-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sino-lbl{font-size:13px;flex:1}
+.sino-btns{display:flex;gap:4px}
+.sino-btn{padding:4px 12px;border-radius:99px;border:0.5px solid var(--border);background:none;font-size:12px;font-weight:500;font-family:var(--font);cursor:pointer;color:var(--text2)}
+.sino-btn.si.active{background:var(--teal-bg);color:var(--teal-text);border-color:var(--teal)}
+.sino-btn.no.active{background:var(--gray-bg);color:var(--gray-text);border-color:transparent}
+.sino-extra{background:var(--bg2);border-radius:var(--r);padding:8px 10px;margin-bottom:8px;display:none}
+
+/* ── VALOR ── */
 .valor-card{background:var(--bg2);border-radius:var(--rl);padding:1.25rem 1.5rem;margin:1.25rem 0;border:0.5px solid var(--border)}
 .valor-num{font-size:32px;font-weight:500;font-family:var(--mono);margin:4px 0 12px}
 .valor-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding-top:12px;border-top:0.5px solid var(--border2)}
@@ -72,15 +118,20 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .vg-val.teal{color:var(--teal)}.vg-val.red{color:var(--red-text)}.vg-val.green{color:var(--green-text)}
 .warn-box{padding:10px 12px;border-radius:var(--r);font-size:13px;margin:1rem 0}
 .warn-red{background:var(--red-bg);color:var(--red-text)}.warn-amber{background:var(--amber-bg);color:var(--amber-text)}
+
+/* ── BUTTONS ── */
 .btn{padding:9px 18px;border-radius:var(--r);border:0.5px solid var(--border);background:none;font-size:13px;font-family:var(--font);cursor:pointer;color:var(--text);display:inline-flex;align-items:center;gap:6px;transition:background .12s;white-space:nowrap}
 .btn:hover{background:var(--bg2)}.btn-primary{background:var(--text);color:var(--bg);border-color:var(--text)}
 .btn-primary:hover{opacity:.85;background:var(--text)}.btn-primary:disabled{opacity:.35;cursor:not-allowed}
 .btn-sm{padding:5px 10px;font-size:12px}.btn-row{display:flex;gap:8px;align-items:center;margin-top:1.25rem;flex-wrap:wrap}
 .saving-msg{font-size:13px;color:var(--text2);display:none;align-items:center;gap:6px}
+
+/* ── BADGES / TABLE ── */
 .badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500}
 .b-blue{background:var(--blue-bg);color:var(--blue-text)}.b-teal{background:var(--teal-bg);color:var(--teal-text)}
 .b-amber{background:var(--amber-bg);color:var(--amber-text)}.b-red{background:var(--red-bg);color:var(--red-text)}
 .b-gray{background:var(--gray-bg);color:var(--gray-text)}.b-green{background:var(--green-bg);color:var(--green-text)}
+.b-purple{background:var(--purple-bg);color:var(--purple-text)}
 .table-wrap{overflow-x:auto;border:0.5px solid var(--border);border-radius:var(--rl)}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{padding:9px 12px;text-align:left;font-size:11px;font-weight:500;color:var(--text2);border-bottom:0.5px solid var(--border);background:var(--bg2);white-space:nowrap}
@@ -97,15 +148,11 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
 .upload-zone:hover{background:var(--bg2)}.upload-zone input{display:none}
 .file-ok-bar{display:flex;align-items:center;gap:8px;font-size:13px;background:var(--teal-bg);color:var(--teal-text);padding:8px 12px;border-radius:var(--r);margin-bottom:1rem}
 .alert{padding:10px 13px;border-radius:var(--r);font-size:13px;margin-bottom:1rem}
-.alert-ok{background:var(--teal-bg);color:var(--teal-text)}
-.alert-err{background:var(--red-bg);color:var(--red-text)}
-.alert-warn{background:var(--amber-bg);color:var(--amber-text)}
+.alert-ok{background:var(--teal-bg);color:var(--teal-text)}.alert-err{background:var(--red-bg);color:var(--red-text)}.alert-warn{background:var(--amber-bg);color:var(--amber-text)}
 .loading{text-align:center;padding:3rem 1rem;color:var(--text2);font-size:13px}
 .empty{text-align:center;padding:3rem 1rem;color:var(--text2);font-size:13px}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--text2);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.config-banner{background:var(--amber-bg);border:0.5px solid #FAC775;border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:13px;color:var(--amber-text)}
-.config-banner strong{display:block;margin-bottom:4px;font-size:14px}
 .hint{font-size:12px;color:var(--text2);margin-top:6px}
 .tar-sections{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 .tar-sec{border:0.5px solid var(--border);border-radius:var(--rl);padding:1.25rem}
@@ -113,229 +160,361 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
 .liq-header{background:var(--bg2);border-radius:var(--rl);padding:1.25rem 1.5rem;margin-bottom:1.5rem;border:0.5px solid var(--border)}
 .liq-filters{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
 .liq-total{margin-top:1rem;padding-top:1rem;border-top:0.5px solid var(--border2);display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.liq-tot-item{text-align:center}
-.liq-tot-val{font-size:18px;font-weight:500;font-family:var(--mono)}
-.liq-tot-lbl{font-size:11px;color:var(--text2);margin-top:2px}
+.liq-tot-item{text-align:center}.liq-tot-val{font-size:18px;font-weight:500;font-family:var(--mono)}.liq-tot-lbl{font-size:11px;color:var(--text2);margin-top:2px}
+.retorno-details{background:var(--bg2);border-radius:var(--r);padding:12px;margin-top:8px;display:none}
+.section-box{border:0.5px solid var(--border2);border-radius:var(--r);padding:12px;margin-bottom:1rem}
 </style>
 </head>
 <body>
+
+<!-- ══════════════════════════════════════════════════════ LOGIN ══ -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-dot"></div>
+      <div><div class="login-title">FleetTrack</div><div class="login-sub">Control de Tráfico</div></div>
+    </div>
+    <div class="login-field"><label>Usuario</label>
+      <input type="text" id="l-user" placeholder="tu usuario" autocomplete="username" onkeydown="if(event.key==='Enter')g('l-pass').focus()">
+    </div>
+    <div class="login-field"><label>Contraseña</label>
+      <input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" id="l-btn" onclick="doLogin()">Ingresar</button>
+    <div class="login-err" id="l-err"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ APP ══ -->
+<div class="app-wrap" id="app-wrap">
 <header class="header">
-  <div class="logo"><div class="logo-dot"></div> FleetTrack</div>
-  <div class="header-right" id="header-date"></div>
+  <div class="logo"><div class="logo-dot"></div> FleetTrack · Control de Tráfico</div>
+  <div class="header-right">
+    <span id="header-date"></span>
+    <span class="header-user" id="header-user"></span>
+    <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+  </div>
 </header>
 <main class="main">
-  <div class="config-banner" id="config-banner" style="display:none">
-    <strong>⚠ Configuración pendiente</strong>
-    Reemplazá la variable <code>API_URL</code> con tu URL de Google Apps Script.
-  </div>
-  <div class="tabs">
-    <button class="tab active" onclick="go('viaje')">Nuevo viaje</button>
-    <button class="tab" onclick="go('historial')">Historial <span class="tab-badge" id="badge-pend" style="display:none">0</span></button>
-    <button class="tab" onclick="go('liquidacion')">Liquidación</button>
-    <button class="tab" onclick="go('tarifas')">Tarifas</button>
-  </div>
+<div class="tabs">
+  <button class="tab active" onclick="go('viaje')">Nuevo viaje</button>
+  <button class="tab" onclick="go('historial')">Historial <span class="tab-badge" id="badge-pend" style="display:none">0</span></button>
+  <button class="tab" onclick="go('liquidacion')">Liquidación</button>
+  <button class="tab" onclick="go('tarifas')">Tarifas</button>
+</div>
 
-  <!-- ═══ NUEVO VIAJE ═══════════════════════════════════════════════════════ -->
-  <div id="panel-viaje" class="panel active">
-    <div id="alert-viaje"></div>
-    <div class="form-sec">
-      <div class="sec-title">Cliente y ruta</div>
-      <div class="fg">
-        <div class="field">
-          <label>Cliente</label>
-          <select id="v-cli" onchange="updOpts();calcValor()"><option value="">— Seleccionar —</option></select>
-        </div>
-        <div class="field">
-          <label>Tipo de vehículo</label>
-          <select id="v-veh" onchange="calcValor()"><option value="">— Seleccionar —</option></select>
-        </div>
-        <div class="field">
-          <label>Origen</label>
-          <div class="ac-wrap">
-            <input type="text" id="v-ori" placeholder="Escribí ciudad o punto de origen..."
-              autocomplete="off"
-              oninput="onCityInput(this,'ori')"
-              onblur="setTimeout(()=>hideAc('ori'),200)"
-              onfocus="onCityInput(this,'ori')">
-            <div class="ac-drop" id="ac-ori"></div>
-          </div>
-        </div>
-        <div class="field">
-          <label>Destino</label>
-          <div class="ac-wrap">
-            <input type="text" id="v-dst" placeholder="Escribí ciudad o punto de destino..."
-              autocomplete="off"
-              oninput="onCityInput(this,'dst')"
-              onblur="setTimeout(()=>hideAc('dst'),200)"
-              onfocus="onCityInput(this,'dst')">
-            <div class="ac-drop" id="ac-dst"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="form-sec">
-      <div class="sec-title">Datos del viaje</div>
-      <div class="fg g3">
-        <div class="field"><label>Km recorridos</label>
-          <input type="number" id="v-km" placeholder="ej: 79" min="0" step="1" oninput="calcValor()"></div>
-        <div class="field"><label>Fecha del viaje</label>
-          <input type="date" id="v-fecha"></div>
-        <div class="field"><label>Estado</label>
-          <select id="v-estado">
-            <option value="Pendiente">Pendiente</option>
-            <option value="Realizado">Realizado</option>
-            <option value="Facturado">Facturado</option>
-          </select></div>
-        <div class="field"><label>Chofer / Conductor</label>
-          <input type="text" id="v-chofer" placeholder="Nombre completo" autocomplete="off"></div>
-        <div class="field"><label>Patente del camión</label>
-          <input type="text" id="v-patente" placeholder="ej: AB 123 CD" style="text-transform:uppercase"></div>
-        <div class="field"><label>Nro. de remito</label>
-          <input type="text" id="v-remito" placeholder="ej: 00012345"></div>
-      </div>
-    </div>
-    <div class="form-sec" id="fletero-sec" style="display:none">
-      <div class="sec-title">Fletero externo</div>
-      <div class="fg g3">
-        <div class="field"><label>Fletero</label>
-          <select id="v-fletero" onchange="calcValor()">
-            <option value="">— Sin fletero (chofer propio) —</option>
-            <option>Brizuela Anibal</option>
-            <option>Ojeda Carlos</option>
-            <option>Scarimbolo Juan</option>
-            <option>Sandoval Gonzalo</option>
-          </select></div>
-      </div>
-    </div>
-    <div id="valor-area"></div>
-    <div class="btn-row">
-      <button class="btn btn-primary" id="btn-guardar" onclick="guardarViaje()" disabled>Guardar viaje</button>
-      <button class="btn" onclick="limpiarForm()">Limpiar</button>
-      <span class="saving-msg" id="saving-msg"><span class="spinner"></span>Guardando en Sheets...</span>
-    </div>
-  </div>
+<!-- ═══ NUEVO VIAJE ════════════════════════════════════════════════════════ -->
+<div id="panel-viaje" class="panel active">
+<div id="alert-viaje"></div>
 
-  <!-- ═══ HISTORIAL ══════════════════════════════════════════════════════════ -->
-  <div id="panel-historial" class="panel">
-    <div class="stats">
-      <div class="stat"><div class="stat-val" id="hs-n">—</div><div class="stat-lbl">Total viajes</div></div>
-      <div class="stat"><div class="stat-val sv-blue" id="hs-fac">—</div><div class="stat-lbl">Total facturado</div></div>
-      <div class="stat"><div class="stat-val sv-red" id="hs-cost">—</div><div class="stat-lbl">Costo fleteros</div></div>
-      <div class="stat"><div class="stat-val sv-green" id="hs-margen">—</div><div class="stat-lbl">Margen</div></div>
-    </div>
-    <div class="filters">
-      <select id="hf-cli" onchange="renderHist()"><option value="">Todos los clientes</option></select>
-      <select id="hf-fle" onchange="renderHist()"><option value="">Todos los fleteros</option></select>
-      <select id="hf-est" onchange="renderHist()">
-        <option value="">Todos los estados</option>
+<div class="form-sec">
+  <div class="sec-title">Datos del remito</div>
+  <div class="fg g3">
+    <div class="field"><label>N° de Remito *</label>
+      <input type="text" id="v-remito" placeholder="ej: 1102R00001"></div>
+    <div class="field"><label>Fecha del viaje *</label>
+      <input type="date" id="v-fecha"></div>
+    <div class="field"><label>Estado</label>
+      <select id="v-estado">
         <option value="Pendiente">Pendiente</option>
         <option value="Realizado">Realizado</option>
         <option value="Facturado">Facturado</option>
-      </select>
-      <input type="month" id="hf-mes" onchange="renderHist()">
-      <button class="btn btn-sm" onclick="loadViajes(true)">↺ Actualizar</button>
-      <button class="btn btn-sm" onclick="exportCSV()">↓ Exportar CSV</button>
+      </select></div>
+  </div>
+</div>
+
+<div class="form-sec">
+  <div class="sec-title">Cliente y ruta</div>
+  <div class="fg">
+    <div class="field">
+      <label>Cliente *</label>
+      <select id="v-cli" onchange="onClienteChange()"><option value="">— Seleccionar —</option></select>
+      <div id="tipo-badge-wrap"></div>
+      <div class="incr-alert" id="incr-alert"></div>
     </div>
-    <div id="hist-state" class="loading"><span class="spinner"></span>Cargando viajes...</div>
-    <div id="hist-table" style="display:none">
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th>Fecha</th><th>Cliente</th><th>Ruta</th><th>Vehículo</th>
-            <th>Fletero</th><th>Km</th><th>Ingreso</th><th>Costo flet.</th><th>Margen</th><th>Estado</th>
-          </tr></thead>
-          <tbody id="hist-body"></tbody>
-        </table>
+    <div class="field"><label>Tipo de vehículo *</label>
+      <select id="v-veh" onchange="calcValor()"><option value="">— Seleccionar —</option></select>
+    </div>
+    <div class="field"><label>Origen *</label>
+      <div class="ac-wrap">
+        <input type="text" id="v-ori" placeholder="Ciudad o punto de origen..." autocomplete="off"
+          oninput="onCityInput(this,'ori')" onblur="setTimeout(()=>hideAc('ori'),200)" onfocus="onCityInput(this,'ori')">
+        <div class="ac-drop" id="ac-ori"></div>
       </div>
     </div>
-    <div id="hist-empty" class="empty" style="display:none">No hay viajes para los filtros seleccionados.</div>
+    <div class="field"><label>Destino *</label>
+      <div class="ac-wrap">
+        <input type="text" id="v-dst" placeholder="Ciudad o punto de destino..." autocomplete="off"
+          oninput="onCityInput(this,'dst')" onblur="setTimeout(()=>hideAc('dst'),200)" onfocus="onCityInput(this,'dst')">
+        <div class="ac-drop" id="ac-dst"></div>
+      </div>
+    </div>
+    <div class="field"><label>Km recorridos *</label>
+      <input type="number" id="v-km" placeholder="ej: 79" min="0" step="1" oninput="calcValor()"></div>
+    <div class="field"><label>Tipo de carga</label>
+      <select id="v-carga">
+        <option value="">— Seleccionar —</option>
+        <option>General</option><option>Refrigerada</option><option>Peligrosa</option>
+        <option>Pallets</option><option>Granel</option><option>Contenedor</option><option>Maquinaria</option>
+      </select></div>
+  </div>
+</div>
+
+<div class="form-sec">
+  <div class="sec-title">Vehículo y conductor</div>
+  <div class="fg g4">
+    <div class="field"><label>Chofer *</label>
+      <input type="text" id="v-chofer" placeholder="Nombre completo" autocomplete="off"></div>
+    <div class="field"><label>Patente tractor *</label>
+      <input type="text" id="v-patente" placeholder="ej: AB 123 CD" style="text-transform:uppercase"></div>
+    <div class="field"><label>Patente acoplado/semi</label>
+      <input type="text" id="v-acoplado" placeholder="ej: AB 456 EF" style="text-transform:uppercase"></div>
+    <div class="field"><label>Observaciones</label>
+      <input type="text" id="v-obs" placeholder="Notas adicionales"></div>
+  </div>
+</div>
+
+<!-- LD extras — solo para viajes LD -->
+<div class="form-sec" id="ld-sec" style="display:none">
+  <div class="sec-title">Extras larga distancia</div>
+  <div class="section-box">
+    <div class="sino-row"><span class="sino-lbl">Peonada</span>
+      <div class="sino-btns">
+        <button class="sino-btn si" data-field="peonada" data-val="Si" onclick="setSino(this)">Sí</button>
+        <button class="sino-btn no active" data-field="peonada" data-val="No" onclick="setSino(this)">No</button>
+      </div>
+    </div>
+    <div class="sino-extra" id="extra-peonada">
+      <div class="field"><label>N° Evento Peonada</label>
+        <input type="text" id="v-nPeonada" placeholder="Número de evento"></div>
+    </div>
+    <div class="sino-row"><span class="sino-lbl">Estadía / Cama</span>
+      <div class="sino-btns">
+        <button class="sino-btn si" data-field="estadia" data-val="Si" onclick="setSino(this)">Sí</button>
+        <button class="sino-btn no active" data-field="estadia" data-val="No" onclick="setSino(this)">No</button>
+      </div>
+    </div>
+    <div class="sino-extra" id="extra-estadia">
+      <div class="field"><label>N° Evento Estadía</label>
+        <input type="text" id="v-nEstadia" placeholder="Número de evento"></div>
+    </div>
+    <div class="sino-row"><span class="sino-lbl">Lateral</span>
+      <div class="sino-btns">
+        <button class="sino-btn si" data-field="lateral" data-val="Si" onclick="setSino(this)">Sí</button>
+        <button class="sino-btn no active" data-field="lateral" data-val="No" onclick="setSino(this)">No</button>
+      </div>
+    </div>
+    <div class="sino-row" style="margin-bottom:0"><span class="sino-lbl">Viaje interno</span>
+      <div class="sino-btns">
+        <button class="sino-btn si" data-field="viajeInterno" data-val="Si" onclick="setSino(this)">Sí</button>
+        <button class="sino-btn no active" data-field="viajeInterno" data-val="No" onclick="setSino(this)">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Retorno -->
+<div class="form-sec">
+  <div class="sec-title">Retorno</div>
+  <div class="section-box">
+    <div class="sino-row" style="margin-bottom:0"><span class="sino-lbl">¿Tiene retorno?</span>
+      <div class="sino-btns">
+        <button class="sino-btn si" data-field="retorno" data-val="Si" onclick="setSino(this)">Sí</button>
+        <button class="sino-btn no active" data-field="retorno" data-val="No" onclick="setSino(this)">No</button>
+      </div>
+    </div>
+    <div class="retorno-details" id="retorno-details">
+      <div class="fg" style="margin-top:8px">
+        <div class="field"><label>Retorno desde</label>
+          <div class="ac-wrap">
+            <input type="text" id="v-retDesde" placeholder="Ciudad de retorno..." autocomplete="off"
+              oninput="onCityInput(this,'retDesde')" onblur="setTimeout(()=>hideAc('retDesde'),200)">
+            <div class="ac-drop" id="ac-retDesde"></div>
+          </div>
+        </div>
+        <div class="field"><label>Cliente del retorno</label>
+          <select id="v-retCli"><option value="">— Sin cliente asignado —</option></select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fletero -->
+<div class="form-sec" id="fletero-sec" style="display:none">
+  <div class="sec-title">Fletero externo</div>
+  <div class="fg g3">
+    <div class="field"><label>Fletero</label>
+      <select id="v-fletero" onchange="calcValor()">
+        <option value="">— Sin fletero (chofer propio) —</option>
+        <option>Brizuela Anibal</option><option>Ojeda Carlos</option>
+        <option>Scarimbolo Juan</option><option>Sandoval Gonzalo</option>
+      </select></div>
+  </div>
+</div>
+
+<div id="valor-area"></div>
+<div class="btn-row">
+  <button class="btn btn-primary" id="btn-guardar" onclick="guardarViaje()" disabled>Guardar viaje</button>
+  <button class="btn" onclick="limpiarForm()">Limpiar</button>
+  <span class="saving-msg" id="saving-msg"><span class="spinner"></span>Guardando en Sheets...</span>
+</div>
+</div>
+
+<!-- ═══ HISTORIAL ═══════════════════════════════════════════════════════════ -->
+<div id="panel-historial" class="panel">
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="hs-n">—</div><div class="stat-lbl">Total viajes</div></div>
+    <div class="stat"><div class="stat-val sv-blue" id="hs-fac">—</div><div class="stat-lbl">Total facturado</div></div>
+    <div class="stat"><div class="stat-val sv-red" id="hs-cost">—</div><div class="stat-lbl">Costo fleteros</div></div>
+    <div class="stat"><div class="stat-val sv-green" id="hs-margen">—</div><div class="stat-lbl">Margen</div></div>
+  </div>
+  <div class="filters">
+    <select id="hf-cli" onchange="renderHist()"><option value="">Todos los clientes</option></select>
+    <select id="hf-fle" onchange="renderHist()"><option value="">Todos los fleteros</option></select>
+    <select id="hf-est" onchange="renderHist()">
+      <option value="">Todos los estados</option>
+      <option value="Pendiente">Pendiente</option><option value="Realizado">Realizado</option><option value="Facturado">Facturado</option>
+    </select>
+    <select id="hf-tipo" onchange="renderHist()">
+      <option value="">CD y LD</option><option value="CD">Solo CD</option><option value="LD">Solo LD</option>
+    </select>
+    <input type="month" id="hf-mes" onchange="renderHist()">
+    <button class="btn btn-sm" onclick="loadViajes(true)">↺ Actualizar</button>
+    <button class="btn btn-sm" onclick="exportCSV()">↓ Exportar CSV</button>
+  </div>
+  <div id="hist-state" class="loading"><span class="spinner"></span>Cargando viajes...</div>
+  <div id="hist-table" style="display:none">
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Fecha</th><th>Remito</th><th>Cliente</th><th>Tipo</th><th>Ruta</th>
+          <th>Km</th><th>Fletero</th><th>Ingreso</th><th>Margen</th><th>Estado</th>
+        </tr></thead>
+        <tbody id="hist-body"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="hist-empty" class="empty" style="display:none">No hay viajes para los filtros seleccionados.</div>
+</div>
+
+<!-- ═══ LIQUIDACIÓN ══════════════════════════════════════════════════════════ -->
+<div id="panel-liquidacion" class="panel">
+  <div class="liq-header">
+    <div class="sec-title" style="border:none;margin:0 0 12px;padding:0">Generar liquidación de fletero</div>
+    <div class="liq-filters">
+      <div class="field"><label>Fletero</label>
+        <select id="lf-fle">
+          <option value="">— Seleccionar —</option>
+          <option>Brizuela Anibal</option><option>Ojeda Carlos</option>
+          <option>Scarimbolo Juan</option><option>Sandoval Gonzalo</option>
+        </select></div>
+      <div class="field"><label>Mes</label><input type="month" id="lf-mes"></div>
+      <div><button class="btn btn-primary" onclick="generarLiq()">Ver liquidación</button></div>
+    </div>
+    <div class="liq-total" id="liq-total" style="display:none">
+      <div class="liq-tot-item"><div class="liq-tot-val" id="lt-n">0</div><div class="liq-tot-lbl">Viajes</div></div>
+      <div class="liq-tot-item"><div class="liq-tot-val sv-blue" id="lt-ing">$0</div><div class="liq-tot-lbl">Total facturado</div></div>
+      <div class="liq-tot-item"><div class="liq-tot-val sv-red" id="lt-cost">$0</div><div class="liq-tot-lbl">A pagar al fletero</div></div>
+      <div class="liq-tot-item"><div class="liq-tot-val sv-green" id="lt-mg">$0</div><div class="liq-tot-lbl">Margen neto</div></div>
+    </div>
+  </div>
+  <div id="liq-area"></div>
+</div>
+
+<!-- ═══ TARIFAS ══════════════════════════════════════════════════════════════ -->
+<div id="panel-tarifas" class="panel">
+  <div id="alert-tarifas"></div>
+  <div class="tar-sections">
+    <div class="tar-sec">
+      <div class="tar-sec-title">Tarifas — lo que cobramos a clientes</div>
+      <div id="ua-cli" class="upload-zone" onclick="document.getElementById('csv-cli').click()">
+        <input type="file" id="csv-cli" accept=".csv" onchange="loadCSV(this,'cli')">
+        <div style="font-size:20px;margin-bottom:6px">↑</div>
+        <strong style="font-size:13px">Subir tarifas de clientes</strong>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">CSV: Cliente · Origen · Destino · Vehiculo · KmMin · KmMax · Base · PorKm · Vigencia</div>
+      </div>
+      <div id="ok-cli" class="file-ok-bar" style="display:none">
+        <span>✓</span><span id="fn-cli"></span>
+        <button class="btn btn-sm" style="margin-left:auto" onclick="document.getElementById('csv-cli').click()">Reemplazar</button>
+      </div>
+      <div class="stats c3" style="margin-bottom:0">
+        <div class="stat"><div class="stat-val" id="ts-cli">—</div><div class="stat-lbl">Clientes</div></div>
+        <div class="stat"><div class="stat-val sv-teal" id="ts-act">—</div><div class="stat-lbl">Vigentes</div></div>
+        <div class="stat"><div class="stat-val sv-amber" id="ts-alerta">—</div><div class="stat-lbl">Por vencer/vencidas</div></div>
+      </div>
+    </div>
+    <div class="tar-sec">
+      <div class="tar-sec-title">Tarifas — lo que pagamos a fleteros</div>
+      <div id="ua-fle" class="upload-zone" onclick="document.getElementById('csv-fle').click()">
+        <input type="file" id="csv-fle" accept=".csv" onchange="loadCSV(this,'fle')">
+        <div style="font-size:20px;margin-bottom:6px">↑</div>
+        <strong style="font-size:13px">Subir tarifas de fleteros</strong>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">Mismo formato · Solo Femsa, Alpla, Syphon, Andina</div>
+      </div>
+      <div id="ok-fle" class="file-ok-bar" style="display:none">
+        <span>✓</span><span id="fn-fle"></span>
+        <button class="btn btn-sm" style="margin-left:auto" onclick="document.getElementById('csv-fle').click()">Reemplazar</button>
+      </div>
+      <div class="stats c3" style="margin-bottom:0">
+        <div class="stat"><div class="stat-val" id="tf-cli">—</div><div class="stat-lbl">Clientes</div></div>
+        <div class="stat"><div class="stat-val sv-teal" id="tf-act">—</div><div class="stat-lbl">Rutas cargadas</div></div>
+        <div class="stat"><div class="stat-val sv-amber" id="tf-alerta">—</div><div class="stat-lbl">Por vencer/vencidas</div></div>
+      </div>
+    </div>
   </div>
 
-  <!-- ═══ LIQUIDACIÓN ════════════════════════════════════════════════════════ -->
-  <div id="panel-liquidacion" class="panel">
-    <div class="liq-header">
-      <div class="sec-title" style="border:none;margin:0 0 12px;padding:0">Generar liquidación</div>
-      <div class="liq-filters">
-        <div class="field"><label>Fletero</label>
-          <select id="lf-fle">
-            <option value="">— Seleccionar fletero —</option>
-            <option>Brizuela Anibal</option>
-            <option>Ojeda Carlos</option>
-            <option>Scarimbolo Juan</option>
-            <option>Sandoval Gonzalo</option>
-          </select></div>
-        <div class="field"><label>Mes</label>
-          <input type="month" id="lf-mes"></div>
-        <div><button class="btn btn-primary" onclick="generarLiq()">Ver liquidación</button></div>
+  <!-- Alertas de incremento -->
+  <div style="margin-top:1.5rem;border:0.5px solid var(--border);border-radius:var(--rl);padding:1.25rem">
+    <div class="sec-title" style="margin-bottom:12px">Próximos incrementos de tarifas CD</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:var(--amber-bg);border-radius:var(--r);padding:12px 14px">
+        <div style="font-size:12px;font-weight:500;color:var(--amber-text)">Trimestral · Alpla · Syphon · Andina</div>
+        <div style="font-size:18px;font-weight:500;font-family:var(--mono);color:var(--amber-text);margin-top:4px" id="incr-trim">01/07/2026</div>
+        <div style="font-size:12px;color:var(--amber-text);margin-top:2px" id="incr-trim-dias"></div>
       </div>
-      <div class="liq-total" id="liq-total" style="display:none">
-        <div class="liq-tot-item"><div class="liq-tot-val" id="lt-n">0</div><div class="liq-tot-lbl">Viajes</div></div>
-        <div class="liq-tot-item"><div class="liq-tot-val sv-blue" id="lt-ing">$0</div><div class="liq-tot-lbl">Total facturado</div></div>
-        <div class="liq-tot-item"><div class="liq-tot-val sv-red" id="lt-cost">$0</div><div class="liq-tot-lbl">A pagar al fletero</div></div>
-        <div class="liq-tot-item"><div class="liq-tot-val sv-green" id="lt-mg">$0</div><div class="liq-tot-lbl">Margen neto</div></div>
+      <div style="background:var(--blue-bg);border-radius:var(--r);padding:12px 14px">
+        <div style="font-size:12px;font-weight:500;color:var(--blue-text)">Cuatrimestral · Arcor · Company</div>
+        <div style="font-size:18px;font-weight:500;font-family:var(--mono);color:var(--blue-text);margin-top:4px" id="incr-cuat">01/08/2026</div>
+        <div style="font-size:12px;color:var(--blue-text);margin-top:2px" id="incr-cuat-dias"></div>
       </div>
     </div>
-    <div id="liq-area"></div>
   </div>
+  <p class="hint" style="margin-top:10px">Las tarifas vencidas no se aplican al calcular nuevos viajes.</p>
+</div>
 
-  <!-- ═══ TARIFAS ════════════════════════════════════════════════════════════ -->
-  <div id="panel-tarifas" class="panel">
-    <div id="alert-tarifas"></div>
-    <div class="tar-sections">
-      <div class="tar-sec">
-        <div class="tar-sec-title">Tarifas — lo que cobramos a clientes</div>
-        <div id="ua-cli" class="upload-zone" onclick="document.getElementById('csv-cli').click()">
-          <input type="file" id="csv-cli" accept=".csv" onchange="loadCSV(this,'cli')">
-          <div style="font-size:20px;margin-bottom:6px">↑</div>
-          <strong style="font-size:13px">Subir tarifas de clientes</strong>
-          <div style="font-size:12px;color:var(--text2);margin-top:4px">CSV: Cliente · Origen · Destino · Vehiculo · KmMin · KmMax · Base · PorKm · Vigencia</div>
-        </div>
-        <div id="ok-cli" class="file-ok-bar" style="display:none">
-          <span>✓</span><span id="fn-cli"></span>
-          <button class="btn btn-sm" style="margin-left:auto" onclick="document.getElementById('csv-cli').click()">Reemplazar</button>
-        </div>
-        <div class="stats c3" style="margin-bottom:0">
-          <div class="stat"><div class="stat-val" id="ts-cli">—</div><div class="stat-lbl">Clientes</div></div>
-          <div class="stat"><div class="stat-val sv-teal" id="ts-act">—</div><div class="stat-lbl">Tarifas vigentes</div></div>
-          <div class="stat"><div class="stat-val sv-amber" id="ts-alerta">—</div><div class="stat-lbl">Por vencer/vencidas</div></div>
-        </div>
-      </div>
-      <div class="tar-sec">
-        <div class="tar-sec-title">Tarifas — lo que pagamos a fleteros</div>
-        <div id="ua-fle" class="upload-zone" onclick="document.getElementById('csv-fle').click()">
-          <input type="file" id="csv-fle" accept=".csv" onchange="loadCSV(this,'fle')">
-          <div style="font-size:20px;margin-bottom:6px">↑</div>
-          <strong style="font-size:13px">Subir tarifas de fleteros</strong>
-          <div style="font-size:12px;color:var(--text2);margin-top:4px">Mismo formato CSV · Solo rutas Femsa, Alpla, Syphon, Andina</div>
-        </div>
-        <div id="ok-fle" class="file-ok-bar" style="display:none">
-          <span>✓</span><span id="fn-fle"></span>
-          <button class="btn btn-sm" style="margin-left:auto" onclick="document.getElementById('csv-fle').click()">Reemplazar</button>
-        </div>
-        <div class="stats c3" style="margin-bottom:0">
-          <div class="stat"><div class="stat-val" id="tf-cli">—</div><div class="stat-lbl">Clientes</div></div>
-          <div class="stat"><div class="stat-val sv-teal" id="tf-act">—</div><div class="stat-lbl">Rutas cargadas</div></div>
-          <div class="stat"><div class="stat-val sv-amber" id="tf-alerta">—</div><div class="stat-lbl">Por vencer/vencidas</div></div>
-        </div>
-      </div>
-    </div>
-    <p class="hint" style="margin-top:10px">Las tarifas vencidas no se aplican al calcular nuevos viajes.</p>
-  </div>
 </main>
+</div><!-- end app-wrap -->
 
 <script>
 // ════════════════════════════════════════════════════════════════════════════
 //  CONFIGURACIÓN
 // ════════════════════════════════════════════════════════════════════════════
-const API_URL        = 'https://script.google.com/macros/s/AKfycbzCzRIE8oZfzmaC_SvoUKO3YZ2_uqAZ3rKspjg5NavpIOevtOVR3Mi0MfSlgNg3dYoK/exec';
-const GEOREF_URL     = 'https://apis.datos.gob.ar/georef/api/localidades';
+const API_URL         = 'REEMPLAZAR_CON_TU_URL_DE_APPS_SCRIPT';
+const GEOREF_URL      = 'https://apis.datos.gob.ar/georef/api/localidades';
 const FLETERO_CLIENTS = ['Femsa','Alpla','Syphon','Andina'];
+
+// Clientes pre-cargados (independiente de tarifas)
+const CLIENTES_CD = ['Alpla','Andina','Arcor','Company','Femsa','Syphon'];
+const CLIENTES_LDCD = ['All Trader','Andina CBA','Arca','Kimberly','Monresa','Pooling','Robinson Pallets Bs As','Softys'];
+const TODOS_CLIENTES = [...CLIENTES_CD,...CLIENTES_LDCD].sort();
+
+// Alertas de incremento
+const INCREMENTOS = {
+  'Alpla':   {tipo:'Trimestral',   fecha:'2026-07-01',color:'amber'},
+  'Syphon':  {tipo:'Trimestral',   fecha:'2026-07-01',color:'amber'},
+  'Andina':  {tipo:'Trimestral',   fecha:'2026-07-01',color:'amber'},
+  'Arcor':   {tipo:'Cuatrimestral',fecha:'2026-08-01',color:'blue'},
+  'Company': {tipo:'Cuatrimestral',fecha:'2026-08-01',color:'blue'},
+};
 
 // ════════════════════════════════════════════════════════════════════════════
 //  ESTADO
 // ════════════════════════════════════════════════════════════════════════════
 let tarifas=[], tarifasFle=[], viajes=[], viajesLoaded=false;
 let acTimers={}, acCache={};
+let sinoState={peonada:'No', estadia:'No', lateral:'No', viajeInterno:'No', retorno:'No'};
+let session=null;
 
 // ════════════════════════════════════════════════════════════════════════════
 //  UTILS
@@ -353,78 +532,221 @@ function fmtDate(s){
   const [y,m,d]=str.split('-');
   return (d&&m&&y)?`${d}/${m}/${y}`:str;
 }
-function rateStatus(r){
-  const d=daysTo(r.Vigencia||r.vigencia);
-  if(d<0) return 'exp'; if(d<=30) return 'warn'; return 'ok';
-}
+function rateStatus(r){ const d=daysTo(r.Vigencia||r.vigencia); if(d<0)return'exp'; if(d<=30)return'warn'; return'ok'; }
 function val(r,...keys){ for(const k of keys){ if(r[k]!==undefined&&r[k]!=='') return r[k]; } return ''; }
 
+// ════════════════════════════════════════════════════════════════════════════
+//  AUTH / SESSION
+// ════════════════════════════════════════════════════════════════════════════
+function saveSession(data){
+  const expiry = new Date(); expiry.setHours(23,59,59,0);
+  localStorage.setItem('ft_session', JSON.stringify({...data, expiry: expiry.getTime()}));
+  session = data;
+}
+function loadSession(){
+  try{
+    const s = JSON.parse(localStorage.getItem('ft_session'));
+    if(!s || Date.now() > s.expiry){ clearSession(); return null; }
+    return s;
+  } catch(e){ return null; }
+}
+function clearSession(){ localStorage.removeItem('ft_session'); session=null; }
+
+async function doLogin(){
+  const user = g('l-user').value.trim();
+  const pass = g('l-pass').value;
+  if(!user||!pass){ showLoginErr('Completá usuario y contraseña.'); return; }
+  g('l-btn').disabled=true; g('l-btn').textContent='Ingresando...';
+  try{
+    const res = await apiCallPublic('login', {username:user, password:pass});
+    if(res.ok){
+      saveSession(res);
+      showApp();
+    } else {
+      showLoginErr(res.error||'Usuario o contraseña incorrectos.');
+    }
+  } catch(e){ showLoginErr('Error de conexión. Verificá la URL del script.'); }
+  g('l-btn').disabled=false; g('l-btn').textContent='Ingresar';
+}
+
+function showLoginErr(msg){ g('l-err').textContent=msg; g('l-err').style.display='block'; }
+
+function logout(){
+  clearSession();
+  g('app-wrap').style.display='none';
+  g('login-wrap').style.display='flex';
+  g('l-user').value=''; g('l-pass').value=''; g('l-err').style.display='none';
+}
+
+function showApp(){
+  g('login-wrap').style.display='none';
+  g('app-wrap').style.display='block';
+  g('header-user').textContent=session.nombre||session.username;
+  g('header-date').textContent=new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
+  if(!g('v-fecha').value) g('v-fecha').value=today();
+  if(!g('lf-mes').value) g('lf-mes').value=todayMonth();
+  poblarClientes();
+  actualizarDiasIncremento();
+  loadTarifas();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  API
+// ════════════════════════════════════════════════════════════════════════════
+async function apiCallPublic(action, data){
+  const url=`${API_URL}?action=${action}&data=${encodeURIComponent(JSON.stringify(data))}`;
+  const resp=await fetch(url,{redirect:'follow'});
+  return resp.json();
+}
+
 async function apiCall(params){
-  if(API_URL.includes('REEMPLAZAR')){ g('config-banner').style.display='block'; throw new Error('URL no configurada'); }
-  const url=`${API_URL}?${new URLSearchParams(params)}`;
+  if(!session) throw new Error('Sin sesión');
+  const p={...params, token:session.token, username:session.username};
+  const url=`${API_URL}?${new URLSearchParams(p)}`;
   const resp=await fetch(url,{redirect:'follow'});
   const json=await resp.json();
+  if(json.error==='No autorizado. Sesión inválida o expirada.'){ logout(); throw new Error('Sesión expirada'); }
   if(json.error) throw new Error(json.error);
   return json;
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  AUTOCOMPLETE — ciudades argentinas (georef.datos.gob.ar)
+//  CLIENTES PRE-CARGADOS
+// ════════════════════════════════════════════════════════════════════════════
+function poblarClientes(){
+  // Select principal
+  g('v-cli').innerHTML='<option value="">— Seleccionar —</option>'+
+    TODOS_CLIENTES.map(c=>`<option value="${c}">${c}</option>`).join('');
+  // Select retorno
+  g('v-retCli').innerHTML='<option value="">— Sin cliente asignado —</option>'+
+    TODOS_CLIENTES.map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+
+function onClienteChange(){
+  const cli=g('v-cli').value;
+  const tipoBadge=g('tipo-badge-wrap');
+  const incAlert=g('incr-alert');
+  const ldSec=g('ld-sec');
+  const fletSec=g('fletero-sec');
+
+  // Vehículos desde tarifas o genérico
+  const activas=tarifas.filter(r=>rateStatus(r)!=='exp'&&val(r,'Cliente','cliente')===cli);
+  const vehs=[...new Set(activas.map(r=>val(r,'Vehiculo','vehiculo')))].filter(Boolean);
+  if(vehs.length){
+    g('v-veh').innerHTML='<option value="">— Seleccionar —</option>'+vehs.map(v=>`<option>${v}</option>`).join('');
+  } else {
+    g('v-veh').innerHTML='<option value="">— Seleccionar —</option><option>Semis</option><option>Chasis</option>';
+  }
+
+  // Tipo badge CD vs LD
+  if(!cli){ tipoBadge.innerHTML=''; }
+  else if(CLIENTES_CD.includes(cli)){
+    tipoBadge.innerHTML='<div class="tipo-badge badge-cd" style="margin-top:6px">● CD — Corta Distancia</div>';
+    ldSec.style.display='none';
+  } else {
+    tipoBadge.innerHTML=`<div style="margin-top:6px">
+      <div style="font-size:11px;color:var(--text2);margin-bottom:4px">TIPO DE VIAJE *</div>
+      <div class="tipo-toggle">
+        <button class="tipo-btn cd" id="tbtn-cd" onclick="setTipo('CD')">CD — Corta Distancia</button>
+        <button class="tipo-btn ld" id="tbtn-ld" onclick="setTipo('LD')">LD — Larga Distancia</button>
+      </div></div>`;
+    ldSec.style.display='none';
+  }
+
+  // Alerta de incremento
+  const inc=INCREMENTOS[cli];
+  if(inc){
+    const d=daysTo(inc.fecha);
+    const col=inc.color==='amber'?'var(--amber-text)':'var(--blue-text)';
+    const bg=inc.color==='amber'?'var(--amber-bg)':'var(--blue-bg)';
+    incAlert.style.display='block';
+    incAlert.style.background=bg; incAlert.style.color=col; incAlert.style.borderColor='';
+    incAlert.innerHTML=`⚠ Próximo incremento ${inc.tipo.toLowerCase()}: <strong>${fmtDate(inc.fecha)}</strong> (en ${d} días)`;
+  } else {
+    incAlert.style.display='none';
+  }
+
+  // Fletero section
+  fletSec.style.display=FLETERO_CLIENTS.includes(cli)?'block':'none';
+  g('v-fletero').value='';
+
+  // Limpiar ruta
+  g('v-ori').value=''; g('v-dst').value='';
+  hideAc('ori'); hideAc('dst');
+  calcValor();
+}
+
+function setTipo(tipo){
+  const cd=g('tbtn-cd'), ld=g('tbtn-ld');
+  if(!cd) return;
+  cd.classList.toggle('active', tipo==='CD');
+  ld.classList.toggle('active', tipo==='LD');
+  g('ld-sec').style.display=tipo==='LD'?'block':'none';
+  calcValor();
+}
+
+function getTipoViaje(){
+  const cli=g('v-cli').value;
+  if(CLIENTES_CD.includes(cli)) return 'CD';
+  const ldBtn=g('tbtn-ld');
+  if(ldBtn&&ldBtn.classList.contains('active')) return 'LD';
+  const cdBtn=g('tbtn-cd');
+  if(cdBtn&&cdBtn.classList.contains('active')) return 'CD';
+  return '';
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  SI/NO TOGGLES
+// ════════════════════════════════════════════════════════════════════════════
+function setSino(btn){
+  const field=btn.dataset.field, val2=btn.dataset.val;
+  sinoState[field]=val2;
+  // Update buttons in same group
+  btn.closest('.sino-btns').querySelectorAll('.sino-btn').forEach(b=>{
+    b.classList.toggle('active', b===btn);
+  });
+  // Show/hide extras
+  if(field==='peonada')      g('extra-peonada').style.display=val2==='Si'?'block':'none';
+  if(field==='estadia')      g('extra-estadia').style.display=val2==='Si'?'block':'none';
+  if(field==='retorno')      g('retorno-details').style.display=val2==='Si'?'block':'none';
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  AUTOCOMPLETE
 // ════════════════════════════════════════════════════════════════════════════
 async function onCityInput(input, field){
   const q=input.value.trim();
   const dd=g(`ac-${field}`);
   clearTimeout(acTimers[field]);
-
-  if(q.length < 2){ dd.style.display='none'; return; }
-
-  acTimers[field]=setTimeout(async ()=>{
-    // 1. Sugerencias desde tarifas del cliente actual
-    const cli=g('v-cli').value;
-    const key=field==='ori'?['Origen','origen']:['Destino','destino'];
-    const fromTarifas=[...new Set(
+  if(q.length<2){ dd.style.display='none'; return; }
+  acTimers[field]=setTimeout(async()=>{
+    const cli=g('v-cli')?g('v-cli').value:'';
+    const key=field==='ori'?['Origen','origen']:field==='dst'?['Destino','destino']:['Origen','origen'];
+    const fromTar=[...new Set(
       tarifas.filter(r=>(!cli||val(r,'Cliente','cliente')===cli)&&norm(val(r,...key)).includes(norm(q)))
              .map(r=>val(r,...key))
     )].filter(Boolean).slice(0,5);
-
-    // 2. Ciudades de Argentina (georef)
     let cities=[];
-    const cacheKey=norm(q);
-    if(acCache[cacheKey]){
-      cities=acCache[cacheKey];
-    } else {
+    const ck=norm(q);
+    if(acCache[ck]){ cities=acCache[ck]; }
+    else{
       try{
         const resp=await fetch(`${GEOREF_URL}?nombre=${encodeURIComponent(q)}&max=8&orden=nombre`);
         const data=await resp.json();
         cities=(data.localidades||[]).map(l=>({nombre:l.nombre,provincia:l.provincia.nombre}));
-        acCache[cacheKey]=cities;
+        acCache[ck]=cities;
       } catch(e){ cities=[]; }
     }
-
-    // 3. Renderizar
     let html='';
-    if(fromTarifas.length){
-      html+=`<div class="ac-sep">Rutas del cliente</div>`;
-      html+=fromTarifas.map(c=>`<div class="ac-item" onmousedown="selectCity('${field}','${c.replace(/'/g,"\\'")}')"><div class="ac-dot-route"></div>${c}</div>`).join('');
-    }
-    if(cities.length){
-      if(fromTarifas.length) html+=`<div class="ac-sep">Localidades de Argentina</div>`;
-      html+=cities.map(c=>`<div class="ac-item" onmousedown="selectCity('${field}','${c.nombre.replace(/'/g,"\\'")}')"><div class="ac-dot-city"></div>${c.nombre}<span class="ac-prov">${c.provincia}</span></div>`).join('');
-    }
+    if(fromTar.length){ html+=`<div class="ac-sep">Rutas del cliente</div>`+fromTar.map(c=>`<div class="ac-item" onmousedown="selectCity('${field}','${c.replace(/'/g,"\\'")}')"><div class="ac-dot-r"></div>${c}</div>`).join(''); }
+    if(cities.length){ if(fromTar.length) html+=`<div class="ac-sep">Localidades de Argentina</div>`; html+=cities.map(c=>`<div class="ac-item" onmousedown="selectCity('${field}','${c.nombre.replace(/'/g,"\\'")}')"><div class="ac-dot-c"></div>${c.nombre}<span class="ac-prov">${c.provincia}</span></div>`).join(''); }
     if(!html) html=`<div class="ac-empty">Sin resultados para "${q}"</div>`;
-
-    dd.innerHTML=html;
-    dd.style.display='block';
-  }, 280);
+    dd.innerHTML=html; dd.style.display='block';
+  },280);
 }
 
-function selectCity(field, value){
-  g(`v-${field}`).value=value;
-  g(`ac-${field}`).style.display='none';
-  calcValor();
-}
-
-function hideAc(field){ g(`ac-${field}`).style.display='none'; }
+function selectCity(field,value){ g(`v-${field}`).value=value; g(`ac-${field}`).style.display='none'; calcValor(); }
+function hideAc(field){ const el=g(`ac-${field}`); if(el) el.style.display='none'; }
 
 // ════════════════════════════════════════════════════════════════════════════
 //  TABS
@@ -435,25 +757,23 @@ function go(tab){
     g(`panel-${t}`).classList.toggle('active',t===tab);
   });
   if(tab==='historial'&&!viajesLoaded) loadViajes();
-  if(tab==='liquidacion'){ if(!viajesLoaded) loadViajes(); if(!g('lf-mes').value) g('lf-mes').value=todayMonth(); }
+  if(tab==='liquidacion'&&!viajesLoaded) loadViajes();
+  if(tab==='tarifas') actualizarDiasIncremento();
 }
 
 // ════════════════════════════════════════════════════════════════════════════
 //  TARIFAS
 // ════════════════════════════════════════════════════════════════════════════
 function matchTarifa(arr,cli,veh,ori,dst,km){
-  // Intento exacto primero, luego normalizado
-  const find=(strict)=>arr.find(r=>{
-    const rCli=val(r,'Cliente','cliente'), rVeh=val(r,'Vehiculo','vehiculo');
-    const rOri=val(r,'Origen','origen'), rDst=val(r,'Destino','destino');
-    const cmpFn=strict?(a,b)=>a===b:(a,b)=>norm(a)===norm(b)||norm(a).includes(norm(b))||norm(b).includes(norm(a));
-    return cmpFn(rCli,cli)&&cmpFn(rVeh,veh)&&cmpFn(rOri,ori)&&cmpFn(rDst,dst)
+  const find=(s)=>arr.find(r=>{
+    const cmp=s?(a,b)=>a===b:(a,b)=>norm(a)===norm(b)||norm(a).includes(norm(b))||norm(b).includes(norm(a));
+    return cmp(val(r,'Cliente','cliente'),cli)&&cmp(val(r,'Vehiculo','vehiculo'),veh)
+      &&cmp(val(r,'Origen','origen'),ori)&&cmp(val(r,'Destino','destino'),dst)
       &&rateStatus(r)!=='exp'&&km>=+(val(r,'KmMin','kmMin')||0)&&km<=+(val(r,'KmMax','kmMax')||9999);
   });
   return find(true)||find(false);
 }
 
-// Busca tarifa de precio por km para este cliente (sin importar ruta)
 function matchPerKm(arr,cli,veh){
   return arr.find(r=>norm(val(r,'Cliente','cliente'))===norm(cli)&&norm(val(r,'Vehiculo','vehiculo'))===norm(veh)
     &&rateStatus(r)!=='exp'&&+(val(r,'PorKm','porKm'))>0&&+(val(r,'Base','base'))===0);
@@ -462,9 +782,9 @@ function matchPerKm(arr,cli,veh){
 async function loadTarifas(){
   try{
     const [cli,fle]=await Promise.all([apiCall({action:'getTarifas'}),apiCall({action:'getTarifasFleteros'})]);
-    if(Array.isArray(cli)&&cli.length){ tarifas=cli; applyTarifaStats('cli',tarifas); g('ua-cli').style.display='none'; g('ok-cli').style.display='flex'; g('fn-cli').textContent=`${cli.length} tarifas desde Sheets`; populateFormSelects(); }
+    if(Array.isArray(cli)&&cli.length){ tarifas=cli; applyTarifaStats('cli',tarifas); g('ua-cli').style.display='none'; g('ok-cli').style.display='flex'; g('fn-cli').textContent=`${cli.length} tarifas desde Sheets`; onClienteChange(); }
     if(Array.isArray(fle)&&fle.length){ tarifasFle=fle; applyTarifaStats('fle',tarifasFle); g('ua-fle').style.display='none'; g('ok-fle').style.display='flex'; g('fn-fle').textContent=`${fle.length} tarifas desde Sheets`; }
-  } catch(e){ if(!API_URL.includes('REEMPLAZAR')) console.warn('Sin tarifas:',e.message); }
+  } catch(e){ console.warn('Sin tarifas:',e.message); }
 }
 
 function applyTarifaStats(tipo,arr){
@@ -480,50 +800,31 @@ function loadCSV(input,tipo){
   const reader=new FileReader();
   reader.onload=async e=>{
     const lines=e.target.result.trim().split('\n').slice(1);
-    const parsed=lines.map(l=>{
-      const c=l.split(',').map(s=>s.trim().replace(/^"|"$/g,''));
+    const parsed=lines.map(l=>{ const c=l.split(',').map(s=>s.trim().replace(/^"|"$/g,''));
       return{Cliente:c[0],Origen:c[1],Destino:c[2],Vehiculo:c[3],KmMin:+c[4],KmMax:+c[5],Base:+c[6],PorKm:+c[7],Vigencia:c[8]};
     }).filter(r=>r.Cliente);
     if(!parsed.length){ showAlert('alert-tarifas','err','Archivo sin datos válidos.'); return; }
     const action=tipo==='cli'?'saveTarifas':'saveTarifasFleteros';
-    const prefix=tipo==='cli'?'ua-cli':'ua-fle';
-    const okId=tipo==='cli'?'ok-cli':'ok-fle';
-    const fnId=tipo==='cli'?'fn-cli':'fn-fle';
-    if(tipo==='cli'){ tarifas=parsed; populateFormSelects(); } else { tarifasFle=parsed; }
+    if(tipo==='cli'){ tarifas=parsed; onClienteChange(); } else { tarifasFle=parsed; }
     applyTarifaStats(tipo,parsed);
-    g(prefix).style.display='none'; g(okId).style.display='flex';
-    g(fnId).textContent=`${file.name} · ${parsed.length} tarifas`;
+    g(tipo==='cli'?'ua-cli':'ua-fle').style.display='none';
+    g(tipo==='cli'?'ok-cli':'ok-fle').style.display='flex';
+    g(tipo==='cli'?'fn-cli':'fn-fle').textContent=`${file.name} · ${parsed.length} tarifas`;
     try{ await apiCall({action,data:encodeURIComponent(JSON.stringify({tarifas:parsed}))}); showAlert('alert-tarifas','ok',`✓ ${parsed.length} tarifas guardadas.`); }
-    catch(err){ showAlert('alert-tarifas','warn','Tarifas cargadas localmente. Error al guardar en Sheets.'); }
+    catch(err){ showAlert('alert-tarifas','warn','Cargadas localmente. Error al guardar en Sheets.'); }
   };
   reader.readAsText(file);
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-//  FORMULARIO NUEVO VIAJE
-// ════════════════════════════════════════════════════════════════════════════
-function populateFormSelects(){
-  const activas=tarifas.filter(r=>rateStatus(r)!=='exp');
-  const clientes=[...new Set(activas.map(r=>val(r,'Cliente','cliente')))].filter(Boolean);
-  const prev=g('v-cli').value;
-  g('v-cli').innerHTML='<option value="">— Seleccionar —</option>'+clientes.map(c=>`<option ${c===prev?'selected':''}>${c}</option>`).join('');
-  if(!g('v-fecha').value) g('v-fecha').value=today();
-  updOpts();
+function actualizarDiasIncremento(){
+  const dTrim=daysTo('2026-07-01'), dCuat=daysTo('2026-08-01');
+  if(g('incr-trim-dias')) g('incr-trim-dias').textContent=`Faltan ${dTrim} días`;
+  if(g('incr-cuat-dias')) g('incr-cuat-dias').textContent=`Faltan ${dCuat} días`;
 }
 
-function updOpts(){
-  const cli=g('v-cli').value;
-  const activas=tarifas.filter(r=>val(r,'Cliente','cliente')===cli&&rateStatus(r)!=='exp');
-  const vehs=[...new Set(activas.map(r=>val(r,'Vehiculo','vehiculo')))].filter(Boolean);
-  g('v-veh').innerHTML='<option value="">— Seleccionar —</option>'+vehs.map(v=>`<option>${v}</option>`).join('');
-  // Limpiar campos de ruta al cambiar cliente
-  g('v-ori').value=''; g('v-dst').value='';
-  hideAc('ori'); hideAc('dst');
-  g('fletero-sec').style.display=FLETERO_CLIENTS.includes(cli)?'block':'none';
-  g('v-fletero').value='';
-  calcValor();
-}
-
+// ════════════════════════════════════════════════════════════════════════════
+//  FORMULARIO
+// ════════════════════════════════════════════════════════════════════════════
 function calcValor(){
   const cli=g('v-cli').value, veh=g('v-veh').value;
   const ori=g('v-ori').value.trim(), dst=g('v-dst').value.trim();
@@ -531,48 +832,33 @@ function calcValor(){
   const fletero=g('v-fletero').value;
   const area=g('valor-area'), btn=g('btn-guardar');
   btn.disabled=true; delete btn.dataset.total; delete btn.dataset.costFle; delete btn.dataset.margen;
-
   if(!cli||!veh||!ori||!dst||isNaN(km)||km<=0){ area.innerHTML=''; return; }
 
-  // Buscar tarifa
   let match=matchTarifa(tarifas,cli,veh,ori,dst,km);
   let perKmMode=false;
-
+  if(!match){ match=matchPerKm(tarifas,cli,veh); if(match) perKmMode=true; }
   if(!match){
-    // Buscar tarifa por km genérica (LD sin ruta fija)
-    match=matchPerKm(tarifas,cli,veh);
-    if(match) perKmMode=true;
-  }
-
-  if(!match){
-    area.innerHTML=`<div class="warn-box warn-red">No se encontró tarifa para <strong>${cli}</strong> · ${ori} → ${dst} · ${Math.round(km)} km.<br><small>Verificá que las tarifas estén cargadas o que los campos coincidan con las rutas configuradas.</small></div>`;
+    area.innerHTML=`<div class="warn-box warn-red">Sin tarifa para <strong>${cli}</strong> · ${ori} → ${dst} · ${Math.round(km)} km.</div>`;
     return;
   }
 
   const base=+(val(match,'Base','base')||0), porKm=+(val(match,'PorKm','porKm')||0);
   const total=Math.round(base+km*porKm);
-
-  // Tarifa fletero
   let costFle=0;
   if(fletero&&FLETERO_CLIENTS.includes(cli)){
-    const mFle=matchTarifa(tarifasFle,cli,veh,ori,dst,km)||matchPerKm(tarifasFle,cli,veh);
-    if(mFle){ const bF=+(val(mFle,'Base','base')||0), pF=+(val(mFle,'PorKm','porKm')||0); costFle=Math.round(bF+km*pF); }
+    const mF=matchTarifa(tarifasFle,cli,veh,ori,dst,km)||matchPerKm(tarifasFle,cli,veh);
+    if(mF){ costFle=Math.round(+(val(mF,'Base','base')||0)+km*(+(val(mF,'PorKm','porKm')||0))); }
   }
-
   const margen=total-costFle;
   btn.dataset.total=total; btn.dataset.costFle=costFle; btn.dataset.margen=margen;
   btn.disabled=false;
 
-  const st=rateStatus(match);
-  const warn=st==='warn'?`<div class="warn-box warn-amber" style="margin-top:10px">⚠ Tarifa vence el ${fmtDate(val(match,'Vigencia','vigencia'))}. Actualizala pronto.</div>`:'';
-  const modeTag=perKmMode?`<span class="badge b-amber" style="font-size:11px">Por km · ${fmt(porKm)}/km</span>`:
-    `<span class="badge b-gray" style="font-size:11px">Base ${fmt(base)} + ${fmt(porKm)}/km extra</span>`;
-
+  const warn=rateStatus(match)==='warn'?`<div class="warn-box warn-amber">⚠ Tarifa vence el ${fmtDate(val(match,'Vigencia','vigencia'))}.</div>`:'';
   area.innerHTML=`<div class="valor-card">
-    <div style="font-size:12px;color:var(--text2);margin-bottom:4px">Valor calculado ${modeTag}</div>
+    <div style="font-size:12px;color:var(--text2)">Valor calculado · ${perKmMode?`${fmt(porKm)}/km`:`Base ${fmt(base)} + ${fmt(porKm)}/km`}</div>
     <div class="valor-num">${fmt(total)}</div>
     <div class="valor-grid">
-      <div class="vg-item"><div class="vg-lbl">Ingreso (cliente)</div><div class="vg-val teal">${fmt(total)}</div></div>
+      <div class="vg-item"><div class="vg-lbl">Ingreso cliente</div><div class="vg-val teal">${fmt(total)}</div></div>
       <div class="vg-item"><div class="vg-lbl">Costo fletero</div><div class="vg-val red">${costFle>0?fmt(costFle):'—'}</div></div>
       <div class="vg-item"><div class="vg-lbl">Margen</div><div class="vg-val ${margen>=0?'green':'red'}">${costFle>0?fmt(margen):'—'}</div></div>
     </div>
@@ -582,15 +868,28 @@ function calcValor(){
 async function guardarViaje(){
   const btn=g('btn-guardar');
   if(!btn.dataset.total) return;
+  const tipo=getTipoViaje();
+  if(!tipo){ showAlert('alert-viaje','err','Seleccioná el tipo de viaje (CD o LD).'); return; }
+  if(!g('v-remito').value.trim()){ showAlert('alert-viaje','err','El N° de Remito es obligatorio.'); return; }
   btn.disabled=true; g('saving-msg').style.display='inline-flex';
   const viaje={
     fecha:g('v-fecha').value||today(), cliente:g('v-cli').value,
-    origen:g('v-ori').value.trim(), destino:g('v-dst').value.trim(),
+    tipoViaje:tipo, origen:g('v-ori').value.trim(), destino:g('v-dst').value.trim(),
     vehiculo:g('v-veh').value, km:Math.round(+g('v-km').value),
     chofer:g('v-chofer').value.trim(), patente:g('v-patente').value.trim().toUpperCase(),
-    remito:g('v-remito').value.trim(), valor:+btn.dataset.total,
-    estado:g('v-estado').value, fletero:g('v-fletero').value||'',
+    patenteAcoplado:g('v-acoplado').value.trim().toUpperCase(),
+    tipoCarga:g('v-carga').value, remito:g('v-remito').value.trim(),
+    valor:+btn.dataset.total, estado:g('v-estado').value,
+    fletero:g('v-fletero').value||'',
     tarifaFletero:+btn.dataset.costFle||0, margen:+btn.dataset.margen||+btn.dataset.total,
+    retorno:sinoState.retorno,
+    retornoDesde:sinoState.retorno==='Si'?g('v-retDesde').value.trim():'',
+    retornoCliente:sinoState.retorno==='Si'?g('v-retCli').value:'',
+    peonada:sinoState.peonada, nEventoPeonada:sinoState.peonada==='Si'?g('v-nPeonada').value.trim():'',
+    estadia:sinoState.estadia, nEventoEstadia:sinoState.estadia==='Si'?g('v-nEstadia').value.trim():'',
+    lateral:sinoState.lateral, viajeInterno:sinoState.viajeInterno,
+    observaciones:g('v-obs').value.trim(),
+    usuario:session?.nombre||session?.username||'',
   };
   try{
     const res=await apiCall({action:'addViaje',data:encodeURIComponent(JSON.stringify(viaje))});
@@ -598,17 +897,25 @@ async function guardarViaje(){
     actualizarBadge();
     showAlert('alert-viaje','ok','✓ Viaje guardado en Google Sheets correctamente.');
     limpiarForm();
-  } catch(e){ showAlert('alert-viaje','err',`Error al guardar: ${e.message}`); btn.disabled=false; }
+  } catch(e){ showAlert('alert-viaje','err',`Error: ${e.message}`); btn.disabled=false; }
   g('saving-msg').style.display='none';
 }
 
 function limpiarForm(){
-  ['v-cli','v-veh','v-fletero'].forEach(id=>g(id).value='');
-  ['v-km','v-chofer','v-patente','v-remito','v-ori','v-dst'].forEach(id=>g(id).value='');
-  g('v-estado').value='Pendiente'; g('v-fecha').value=today();
+  g('v-cli').value=''; g('v-veh').value=''; g('v-carga').value='';
+  g('v-fletero').value=''; g('v-estado').value='Pendiente';
+  ['v-ori','v-dst','v-km','v-chofer','v-patente','v-acoplado','v-remito','v-obs',
+   'v-nPeonada','v-nEstadia','v-retDesde'].forEach(id=>{if(g(id))g(id).value='';});
+  g('v-fecha').value=today();
   g('valor-area').innerHTML=''; g('btn-guardar').disabled=true;
   delete g('btn-guardar').dataset.total;
-  g('fletero-sec').style.display='none'; hideAc('ori'); hideAc('dst');
+  g('ld-sec').style.display='none'; g('fletero-sec').style.display='none';
+  g('tipo-badge-wrap').innerHTML=''; g('incr-alert').style.display='none';
+  g('extra-peonada').style.display='none'; g('extra-estadia').style.display='none';
+  g('retorno-details').style.display='none';
+  sinoState={peonada:'No',estadia:'No',lateral:'No',viajeInterno:'No',retorno:'No'};
+  document.querySelectorAll('.sino-btn').forEach(b=>{ b.classList.toggle('active',b.dataset.val==='No'); });
+  hideAc('ori'); hideAc('dst');
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -639,12 +946,14 @@ function actualizarBadge(){
 }
 
 function renderHist(){
-  const fc=g('hf-cli').value, ff=g('hf-fle').value, fe=g('hf-est').value, fm=g('hf-mes').value;
+  const fc=g('hf-cli').value, ff=g('hf-fle').value;
+  const fe=g('hf-est').value, fm=g('hf-mes').value, ft=g('hf-tipo').value;
   const filtered=viajes.filter(v=>{
     if(fc&&val(v,'cliente','Cliente')!==fc) return false;
     if(ff&&val(v,'fletero','Fletero')!==ff) return false;
     if(fe&&val(v,'estado','Estado')!==fe) return false;
     if(fm&&!String(val(v,'fecha','Fecha')||'').startsWith(fm)) return false;
+    if(ft&&val(v,'tipoViaje','TipoViaje')!==ft) return false;
     return true;
   });
   const total=filtered.reduce((s,v)=>s+(+val(v,'valor','Valor')||0),0);
@@ -660,18 +969,19 @@ function renderHist(){
   g('hist-body').innerHTML=filtered.map(v=>{
     const id=val(v,'id','ID','_id')||Math.random();
     const est=val(v,'estado','Estado')||'Pendiente';
+    const tipo=val(v,'tipoViaje','TipoViaje')||'CD';
     const fle=val(v,'fletero','Fletero')||'';
-    const costFle=+val(v,'tarifaFletero','TarifaFletero')||0;
     const mg=+val(v,'margen','Margen')||0;
+    const ret=val(v,'retorno','Retorno');
     return `<tr>
       <td style="white-space:nowrap">${fmtDate(val(v,'fecha','Fecha'))}</td>
+      <td class="mono">${val(v,'remito','Remito')||'—'}</td>
       <td><span class="badge b-blue">${val(v,'cliente','Cliente')}</span></td>
+      <td><span class="badge ${tipo==='LD'?'b-purple':'b-blue'}">${tipo}</span>${ret==='Si'?'<span class="badge b-teal" style="margin-left:3px">↩ Ret.</span>':''}</td>
       <td style="white-space:nowrap">${val(v,'origen','Origen')} → ${val(v,'destino','Destino')}</td>
-      <td>${val(v,'vehiculo','Vehiculo')}</td>
-      <td>${fle?`<span class="badge b-gray">${fle}</span>`:'—'}</td>
       <td class="mono">${Math.round(+val(v,'km','Km')||0)}</td>
+      <td>${fle?`<span class="badge b-gray">${fle}</span>`:'—'}</td>
       <td class="mono">${fmt(val(v,'valor','Valor'))}</td>
-      <td class="mono">${costFle>0?fmt(costFle):'—'}</td>
       <td class="mono" style="color:${mg>=0?'var(--green-text)':'var(--red-text)'}">${fmt(mg)}</td>
       <td><select class="est-sel ${est.toLowerCase()}" data-id="${id}" onchange="cambiarEstado(this)">
         <option ${est==='Pendiente'?'selected':''} value="Pendiente">Pendiente</option>
@@ -693,12 +1003,13 @@ async function cambiarEstado(sel){
 
 function exportCSV(){
   if(!viajes.length){ alert('No hay viajes para exportar.'); return; }
-  const head='Fecha,Cliente,Origen,Destino,Vehiculo,Fletero,Km,Valor,CostoFletero,Margen,Estado,Chofer,Patente,Remito';
+  const head='Fecha,Remito,Cliente,Tipo,Origen,Destino,Vehiculo,Km,Chofer,Patente,Fletero,Valor,Margen,Estado,Retorno,Peonada,Estadia';
   const rows=viajes.map(v=>[
-    val(v,'fecha','Fecha'),val(v,'cliente','Cliente'),val(v,'origen','Origen'),val(v,'destino','Destino'),
-    val(v,'vehiculo','Vehiculo'),val(v,'fletero','Fletero')||'',val(v,'km','Km'),val(v,'valor','Valor'),
-    val(v,'tarifaFletero','TarifaFletero')||0,val(v,'margen','Margen')||0,val(v,'estado','Estado'),
-    val(v,'chofer','Chofer')||'',val(v,'patente','Patente')||'',val(v,'remito','Remito')||''
+    val(v,'fecha','Fecha'),val(v,'remito','Remito'),val(v,'cliente','Cliente'),val(v,'tipoViaje','TipoViaje'),
+    val(v,'origen','Origen'),val(v,'destino','Destino'),val(v,'vehiculo','Vehiculo'),val(v,'km','Km'),
+    val(v,'chofer','Chofer'),val(v,'patente','Patente'),val(v,'fletero','Fletero')||'',
+    val(v,'valor','Valor'),val(v,'margen','Margen')||0,val(v,'estado','Estado'),
+    val(v,'retorno','Retorno')||'No',val(v,'peonada','Peonada')||'No',val(v,'estadia','Estadia')||'No'
   ].map(x=>`"${x}"`).join(','));
   const blob=new Blob([head+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
@@ -709,11 +1020,10 @@ function exportCSV(){
 //  LIQUIDACIÓN
 // ════════════════════════════════════════════════════════════════════════════
 function generarLiq(){
-  const fle=g('lf-fle').value, mes=g('lf-mes').value;
-  const area=g('liq-area');
+  const fle=g('lf-fle').value, mes=g('lf-mes').value, area=g('liq-area');
   if(!fle){ area.innerHTML='<div class="alert alert-warn">Seleccioná un fletero.</div>'; return; }
   if(!mes){ area.innerHTML='<div class="alert alert-warn">Seleccioná el mes.</div>'; return; }
-  if(!viajesLoaded){ area.innerHTML='<div class="loading"><span class="spinner"></span>Cargando datos...</div>'; loadViajes().then(()=>generarLiq()); return; }
+  if(!viajesLoaded){ area.innerHTML='<div class="loading"><span class="spinner"></span>Cargando...</div>'; loadViajes().then(()=>generarLiq()); return; }
   const filtrados=viajes.filter(v=>val(v,'fletero','Fletero')===fle&&String(val(v,'fecha','Fecha')||'').startsWith(mes));
   const ing=filtrados.reduce((s,v)=>s+(+val(v,'valor','Valor')||0),0);
   const cost=filtrados.reduce((s,v)=>s+(+val(v,'tarifaFletero','TarifaFletero')||0),0);
@@ -730,20 +1040,19 @@ function generarLiq(){
       <button class="btn btn-sm" onclick="exportLiq('${fle}','${mes}')">↓ Exportar liquidación</button>
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>Fecha</th><th>Cliente</th><th>Ruta</th><th>Vehículo</th><th>Km</th><th>Ingreso</th><th>A pagar</th><th>Margen</th></tr></thead>
+      <thead><tr><th>Fecha</th><th>Remito</th><th>Cliente</th><th>Ruta</th><th>Km</th><th>Ingreso</th><th>A pagar</th><th>Margen</th></tr></thead>
       <tbody>
         ${filtrados.map(v=>`<tr>
           <td>${fmtDate(val(v,'fecha','Fecha'))}</td>
+          <td class="mono">${val(v,'remito','Remito')||'—'}</td>
           <td><span class="badge b-blue">${val(v,'cliente','Cliente')}</span></td>
           <td>${val(v,'origen','Origen')} → ${val(v,'destino','Destino')}</td>
-          <td>${val(v,'vehiculo','Vehiculo')}</td>
           <td class="mono">${Math.round(+val(v,'km','Km')||0)}</td>
           <td class="mono sv-blue">${fmt(val(v,'valor','Valor'))}</td>
           <td class="mono sv-red"><strong>${fmt(val(v,'tarifaFletero','TarifaFletero')||0)}</strong></td>
           <td class="mono sv-green">${fmt(val(v,'margen','Margen')||0)}</td>
         </tr>`).join('')}
-        <tr style="background:var(--bg2)">
-          <td colspan="5" style="font-weight:500;font-size:12px">TOTAL</td>
+        <tr style="background:var(--bg2)"><td colspan="5" style="font-weight:500;font-size:12px">TOTAL</td>
           <td class="mono" style="font-weight:500">${fmt(ing)}</td>
           <td class="mono" style="font-weight:500;color:var(--red-text)">${fmt(cost)}</td>
           <td class="mono" style="font-weight:500;color:var(--green-text)">${fmt(mg)}</td>
@@ -755,8 +1064,8 @@ function generarLiq(){
 function exportLiq(fle,mes){
   const filtrados=viajes.filter(v=>val(v,'fletero','Fletero')===fle&&String(val(v,'fecha','Fecha')||'').startsWith(mes));
   if(!filtrados.length) return;
-  const head='Fecha,Cliente,Origen,Destino,Vehiculo,Km,Ingreso ARS,A Pagar ARS,Margen ARS';
-  const rows=filtrados.map(v=>[val(v,'fecha','Fecha'),val(v,'cliente','Cliente'),val(v,'origen','Origen'),val(v,'destino','Destino'),val(v,'vehiculo','Vehiculo'),val(v,'km','Km'),val(v,'valor','Valor'),val(v,'tarifaFletero','TarifaFletero')||0,val(v,'margen','Margen')||0].map(x=>`"${x}"`).join(','));
+  const head='Fecha,Remito,Cliente,Origen,Destino,Vehiculo,Km,Ingreso ARS,A Pagar ARS,Margen ARS';
+  const rows=filtrados.map(v=>[val(v,'fecha','Fecha'),val(v,'remito','Remito'),val(v,'cliente','Cliente'),val(v,'origen','Origen'),val(v,'destino','Destino'),val(v,'vehiculo','Vehiculo'),val(v,'km','Km'),val(v,'valor','Valor'),val(v,'tarifaFletero','TarifaFletero')||0,val(v,'margen','Margen')||0].map(x=>`"${x}"`).join(','));
   const blob=new Blob([head+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download=`liquidacion_${fle.split(' ')[0]}_${mes}.csv`; a.click();
@@ -771,10 +1080,10 @@ function showAlert(id,type,msg){
   setTimeout(()=>{ if(g(id)) g(id).innerHTML=''; },5000);
 }
 
-g('header-date').textContent=new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
-g('v-fecha').value=today();
-if(API_URL.includes('REEMPLAZAR')) g('config-banner').style.display='block';
-loadTarifas();
+// Verificar sesión al cargar
+session=loadSession();
+if(session){ showApp(); }
+// Si no hay sesión, el login-wrap ya está visible por CSS
 </script>
 </body>
 </html>

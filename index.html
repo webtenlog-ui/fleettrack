@@ -1185,15 +1185,10 @@ function renderHist(){
       <td style="white-space:nowrap;font-size:12px">${val(v,'origen','Origen')} → ${val(v,'destino','Destino')}</td>
       <td class="mono">${val(v,'patente','Patente')||'—'}</td>
       <td class="mono">${Math.round(+val(v,'km','Km')||0)}</td>
-      <td><div style="display:flex;flex-wrap:wrap;gap:2px;cursor:pointer" onclick="abrirCheckpoints('${id}',${JSON.stringify({
-        ChkTransito:val(v,'ChkTransito'),FechaInicioTransito:val(v,'FechaInicioTransito'),FechaFinTransito:val(v,'FechaFinTransito'),
-        ChkRendidoChofer:val(v,'ChkRendidoChofer'),ChkPendienteDevolucion:val(v,'ChkPendienteDevolucion'),
-        ChkRendidoDigital:val(v,'ChkRendidoDigital'),ChkRendidoFisico:val(v,'ChkRendidoFisico'),
-        remito:val(v,'remito','Remito')
-      }).replace(/'/g,"\\'")})">
+      <td><div style="display:flex;flex-wrap:wrap;gap:2px;cursor:pointer" class="chk-click" data-id="${id}" data-ct="${val(v,'ChkTransito')}" data-ci="${val(v,'FechaInicioTransito')}" data-cf="${val(v,'FechaFinTransito')}" data-cc="${val(v,'ChkRendidoChofer')}" data-cd="${val(v,'ChkPendienteDevolucion')}" data-cdi="${val(v,'ChkRendidoDigital')}" data-cfi="${val(v,'ChkRendidoFisico')}" data-rem="${val(v,'remito','Remito')}">
         ${chkHtml}
       </div></td>
-      <td class="mono">${+val(v,'valor','Valor')===0?'<span class="badge b-amber" title="Sin tarifa cargada">⚠ $0</span>':fmt(val(v,'valor','Valor'))}</td>
+      <td class="mono">${(+val(v,'valor','Valor')||0)===0?'<span class="badge b-amber" style="font-size:12px" title="Sin tarifa cargada">⚠ Sin tarifa</span>':fmt(val(v,'valor','Valor'))}</td>
       <td class="mono" style="color:${mg>=0?'var(--green-text)':'var(--red-text)'}">${fmt(mg)}</td>
       <td>${adminActions}</td>
     </tr>`;
@@ -1483,6 +1478,21 @@ function showAlert(id,type,msg){
 // Cerrar modales al hacer clic afuera
 ['edit-modal','chk-modal'].forEach(id=>{
   g(id).addEventListener('click',e=>{if(e.target===g(id))g(id).classList.remove('open');});
+});
+
+// Delegación de eventos para checkpoints (evita problemas con JSON en onclick)
+document.addEventListener('click',e=>{
+  const el=e.target.closest('.chk-click');
+  if(el){
+    const d=el.dataset;
+    const isTrue=v=>v==='true'||v===true||v==='TRUE'||v==='1';
+    abrirCheckpoints(d.id,{
+      ChkTransito:isTrue(d.ct),FechaInicioTransito:d.ci||'',FechaFinTransito:d.cf||'',
+      ChkRendidoChofer:isTrue(d.cc),ChkPendienteDevolucion:isTrue(d.cd),
+      ChkRendidoDigital:isTrue(d.cdi),ChkRendidoFisico:isTrue(d.cfi),
+      remito:d.rem||''
+    });
+  }
 });
 
 session=loadSession();

@@ -1020,9 +1020,21 @@ function calcValor(){
   const area=g('valor-area'),btn=g('btn-guardar');
   btn.disabled=true;delete btn.dataset.total;delete btn.dataset.costFle;delete btn.dataset.margen;
   if(!cli||!veh||!ori||!dst||isNaN(km)||km<=0){area.innerHTML='';return;}
+
   let match=matchTarifa(tarifas,cli,veh,ori,dst,km);let perKmMode=false;
   if(!match){match=matchPerKm(tarifas,cli,veh);if(match)perKmMode=true;}
-  if(!match){area.innerHTML=`<div class="warn-box warn-red">Sin tarifa para <strong>${cli}</strong> · ${ori} → ${dst} · ${Math.round(km)} km.</div>`;return;}
+
+  // Sin tarifa: igual habilitamos guardar con valor $0 y mostramos alerta
+  if(!match){
+    btn.dataset.total=0;btn.dataset.costFle=0;btn.dataset.margen=0;
+    btn.disabled=false;
+    area.innerHTML=`<div class="warn-box warn-amber" style="border:0.5px solid #FAC775">
+      ⚠ No hay tarifa cargada para <strong>${cli}</strong> · ${ori} → ${dst} · ${Math.round(km)} km.<br>
+      <span style="font-size:12px">El viaje se va a guardar con valor <strong>$0</strong>. Recordá cargar la tarifa y actualizar el registro.</span>
+    </div>`;
+    return;
+  }
+
   const base=+(val(match,'Base','base')||0),porKm=+(val(match,'PorKm','porKm')||0);
   const total=Math.round(base+km*porKm);
   let costFle=0;
@@ -1181,7 +1193,7 @@ function renderHist(){
       }).replace(/'/g,"\\'")})">
         ${chkHtml}
       </div></td>
-      <td class="mono">${fmt(val(v,'valor','Valor'))}</td>
+      <td class="mono">${+val(v,'valor','Valor')===0?'<span class="badge b-amber" title="Sin tarifa cargada">⚠ $0</span>':fmt(val(v,'valor','Valor'))}</td>
       <td class="mono" style="color:${mg>=0?'var(--green-text)':'var(--red-text)'}">${fmt(mg)}</td>
       <td>${adminActions}</td>
     </tr>`;

@@ -241,6 +241,19 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
   </div>
 </div>
 
+<!-- OC: solo Softys y Kimberly -->
+<div class="form-sec" id="oc-sec" style="display:none">
+  <div class="sec-title">Orden de compra (OC)</div>
+  <div class="fg">
+    <div class="field">
+      <label>Número de OC</label>
+      <input type="text" id="v-oc" placeholder="ej: 60430041" autocomplete="off"
+        oninput="onOCInput()" onblur="lookupProforma()">
+    </div>
+    <div id="proforma-result" style="display:none;align-items:center"></div>
+  </div>
+</div>
+
 <div class="form-sec">
   <div class="sec-title">Cliente y ruta</div>
   <div class="fg">
@@ -800,6 +813,10 @@ function onClienteChange(){
   else incAlert.style.display='none';
   g('fletero-sec').style.display=FLETERO_CLIENTS.includes(cli)?'block':'none';
   g('v-fletero').value='';g('v-ori').value='';g('v-dst').value='';
+  // OC solo para Softys y Kimberly
+  const ocClients=['Softys','Kimberly'];
+  g('oc-sec').style.display=ocClients.includes(cli)?'block':'none';
+  if(!ocClients.includes(cli)){ g('v-oc').value=''; g('proforma-result').style.display='none'; }
   hideAc('ori');hideAc('dst');calcValor();
 }
 
@@ -918,6 +935,60 @@ function checkKmPointer(patente,fecha){
     kmDiv.style.display='block';
     kmDiv.innerHTML=`<span style="color:var(--text3)">Sin datos Pointer para ${patente} el ${fmtDate(fecha)}. Podés ingresar los km manualmente.</span>`;
     g('v-km').removeAttribute('readonly');
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  OC / PROFORMA LOOKUP
+// ════════════════════════════════════════════════════════════════════════════
+let ocTimer = null;
+function onOCInput(){
+  clearTimeout(ocTimer);
+  g('proforma-result').style.display='none';
+  ocTimer = setTimeout(lookupProforma, 800);
+}
+
+async function lookupProforma(){
+  const oc = (g('v-oc').value||'').trim();
+  const cli = g('v-cli').value;
+  const res = g('proforma-result');
+  if(!oc || cli !== 'Softys'){ res.style.display='none'; return; }
+
+  res.style.display='block';
+  res.innerHTML='<div style="font-size:12px;color:var(--text2)"><span class="spinner"></span>Buscando proforma...</div>';
+
+  try{
+    const data = await apiCall({action:'getProformaByOC', oc});
+    if(!data.found){
+      res.innerHTML=`<div class="warn-box warn-amber" style="margin:0">⚠ OC <strong>${oc}</strong> no encontrada en el historial de proformas.</div>`;
+      delete g('btn-guardar').dataset.valorProforma;
+      calcValor();
+      return;
+    }
+    const vProf = data.total;
+    g('btn-guardar').dataset.valorProforma = vProf;
+
+    // Recalcular desvío si hay valor de tarifa
+    const vTarifa = +g('btn-guardar').dataset.total || 0;
+    const desvio  = vTarifa > 0 ? vTarifa - vProf : 0;
+    const desvioColor = desvio >= 0 ? 'var(--green-text)' : 'var(--red-text)';
+    const desvioLabel = desvio >= 0 ? '▲ Favorable' : '▼ Revisar';
+
+    res.innerHTML=`<div style="background:var(--bg2);border-radius:var(--r);padding:10px 14px;border:0.5px solid var(--border2)">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div><div style="font-size:11px;color:var(--text2);margin-bottom:3px">VALOR PROFORMA</div>
+          <div style="font-size:16px;font-weight:500;font-family:var(--mono);color:var(--blue-text)">${fmt(vProf)}</div></div>
+        <div><div style="font-size:11px;color:var(--text2);margin-bottom:3px">TARIFA PROPIA</div>
+          <div style="font-size:16px;font-weight:500;font-family:var(--mono)">${vTarifa>0?fmt(vTarifa):'Sin tarifa'}</div></div>
+        <div><div style="font-size:11px;color:var(--text2);margin-bottom:3px">DESVÍO</div>
+          <div style="font-size:16px;font-weight:500;font-family:var(--mono);color:${desvioColor}">${vTarifa>0?fmt(desvio)+' '+desvioLabel:'—'}</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:8px">
+        Ruta: <strong>${data.rutas||'—'}</strong> · Proforma N° <strong>${data.nroProforma||'—'}</strong> · ${data.cantRegistros} ítem(s)
+      </div>
+    </div>`;
+  }catch(e){
+    res.innerHTML=`<div class="warn-box warn-red" style="margin:0">Error al buscar la proforma: ${e.message}</div>`;
   }
 }
 
@@ -1045,6 +1116,10 @@ function calcValor(){
   const margen=total-costFle;
   btn.dataset.total=total;btn.dataset.costFle=costFle;btn.dataset.margen=margen;btn.disabled=false;
   const warn=rateStatus(match)==='warn'?`<div class="warn-box warn-amber">⚠ Tarifa vence el ${fmtDate(val(match,'Vigencia','vigencia'))}.</div>`:'';
+  // Refresh proforma comparison if OC is loaded
+  const ocVal = g('v-oc') ? g('v-oc').value.trim() : '';
+  if(ocVal && cli==='Softys') setTimeout(lookupProforma, 100);
+
   area.innerHTML=`<div class="valor-card">
     <div style="font-size:12px;color:var(--text2)">Valor calculado</div>
     <div class="valor-num">${fmt(total)}</div>
@@ -1090,7 +1165,11 @@ async function guardarViaje(){
     peonada:sinoState.peonada,nEventoPeonada:sinoState.peonada==='Si'?g('v-nPeonada').value.trim():'',
     armeDes:sinoState.armeDes,laterales:sinoState.laterales,viajeInterno:sinoState.viajeInterno,permanencia:sinoState.permanencia,
     cantClientes:cantCli,clientesVisitados:clientesVisitados.join(' | '),
-    observaciones:g('v-obs').value.trim(),usuario:session?.nombre||session?.username||'',
+    observaciones:g('v-obs').value.trim(),
+    oc:(g('v-oc')&&g('v-oc').value.trim())||'',
+    valorProforma:+(g('btn-guardar').dataset.valorProforma||0),
+    desvioProforma:(+(g('btn-guardar').dataset.total||0))-(+(g('btn-guardar').dataset.valorProforma||0)),
+    usuario:session?.nombre||session?.username||'',
   };
   try{
     const res=await apiCall({action:'addViaje',data:encodeURIComponent(JSON.stringify(viaje))});
@@ -1107,6 +1186,10 @@ function limpiarForm(){
   g('clientes-visitados-wrap').style.display='none';g('clientes-visitados-fields').innerHTML='';
   g('valor-area').innerHTML='';g('btn-guardar').disabled=true;delete g('btn-guardar').dataset.total;
   g('ld-sec').style.display='none';g('fletero-sec').style.display='none';
+  g('oc-sec').style.display='none';
+  if(g('v-oc'))g('v-oc').value='';
+  if(g('proforma-result'))g('proforma-result').style.display='none';
+  delete g('btn-guardar').dataset.valorProforma;
   g('tipo-badge-wrap').innerHTML='';g('incr-alert').style.display='none';
   g('extra-peonada').style.display='none';g('retorno-details').style.display='none';
   g('patente-alert').style.display='none';g('km-pointer').style.display='none';g('km-georef').style.display='none';

@@ -428,7 +428,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
     <select id="hf-tipo" onchange="renderHist()">
       <option value="">CD y LD</option><option value="CD">Solo CD</option><option value="LD">Solo LD</option>
     </select>
-    <input type="month" id="hf-mes" onchange="renderHist()">
+    <input type="month" id="hf-mes" onchange="onMesFiltroChange()">
     <button class="btn btn-sm" onclick="loadViajes(true)">↺ Actualizar</button>
     <button class="btn btn-sm" onclick="exportCSV()">↓ CSV</button>
   </div>
@@ -689,7 +689,7 @@ function jsonpCall(url){
   return new Promise((resolve,reject)=>{
     const cb='_ft'+Date.now()+Math.floor(Math.random()*99999);
     const script=document.createElement('script');
-    const timer=setTimeout(()=>{cleanup();reject(new Error('Timeout'));},20000);
+    const timer=setTimeout(()=>{cleanup();reject(new Error('Timeout'));},45000);
     window[cb]=(data)=>{cleanup();resolve(data);};
     function cleanup(){clearTimeout(timer);delete window[cb];if(script.parentNode)script.parentNode.removeChild(script);}
     script.src=url+'&callback='+cb;
@@ -1118,16 +1118,36 @@ function limpiarForm(){
 // ════════════════════════════════════════════════════════════════════════════
 //  HISTORIAL
 // ════════════════════════════════════════════════════════════════════════════
-async function loadViajes(force=false){
-  if(viajesLoaded&&!force){renderHist();return;}
+async function loadViajes(force=false, mesFiltro=''){
+  if(viajesLoaded&&!force&&!mesFiltro){renderHist();return;}
   g('hist-state').style.display='block';g('hist-state').innerHTML='<span class="spinner"></span>Cargando desde Sheets...';
   g('hist-table').style.display='none';g('hist-empty').style.display='none';
+
+  // Usar mes del filtro o mes actual si no hay filtro global (para performance con historial grande)
+  const mes = mesFiltro || g('hf-mes').value || '';
+  const params = {action:'getViajes'};
+  if(mes) params.mes = mes;
+
   try{
-    const data=await apiCall({action:'getViajes'});
-    viajes=Array.isArray(data)?data:[];viajesLoaded=true;
+    const data=await apiCall(params);
+    if(mes){
+      // Merge con viajes ya cargados de otros meses
+      const idsExistentes=new Set(viajes.map(v=>val(v,'id','ID','_id')));
+      const nuevos=(Array.isArray(data)?data:[]).filter(v=>!idsExistentes.has(val(v,'id','ID','_id')));
+      viajes=[...nuevos,...viajes];
+    } else {
+      viajes=Array.isArray(data)?data:[];
+    }
+    viajesLoaded=true;
     poblarFiltros();actualizarBadge();renderHist();
   }catch(e){g('hist-state').innerHTML=`Error: ${e.message}`;}
 }
+function onMesFiltroChange(){
+  const mes=g('hf-mes').value;
+  if(mes) loadViajes(true, mes);
+  else renderHist();
+}
+
 function poblarFiltros(){
   const clis=[...new Set(viajes.map(v=>val(v,'cliente','Cliente')))].filter(Boolean);
   const fles=[...new Set(viajes.map(v=>val(v,'fletero','Fletero')))].filter(f=>f&&f!=='');

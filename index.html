@@ -208,6 +208,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
     <span id="header-date"></span>
     <select id="empresa-sel" onchange="cambiarEmpresa(this.value)"
       style="border:0.5px solid var(--border);border-radius:var(--r);padding:4px 10px;font-size:12px;background:var(--bg);font-family:var(--font);cursor:pointer">
+      <option value="Tenlog">Tenlog</option>
       <option value="Barracas Semis">Barracas Semis</option>
       <option value="Buenos Ayres">Buenos Ayres</option>
       <option value="Noria">Noria</option>
@@ -565,7 +566,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
     <div>
       <div class="filters" style="margin:0">
         <select id="ff-tipo" onchange="renderFlota()"><option value="">Todos</option><option>Tractor</option><option>Acoplado/Semi</option></select>
-        <select id="ff-emp" onchange="renderFlota()"><option value="">Todas las empresas</option><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select>
+        <select id="ff-emp" onchange="renderFlota()"><option value="">Todas las empresas</option><option>Tenlog</option><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select>
         <select id="ff-act" onchange="renderFlota()"><option value="">Activos e inactivos</option><option value="1">Solo activos</option><option value="0">Solo inactivos</option></select>
       </div>
     </div>
@@ -591,7 +592,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
   <div id="alert-choferes"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
     <div class="filters" style="margin:0">
-      <select id="cf-emp" onchange="renderChoferes()"><option value="">Todas las empresas</option><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select>
+      <select id="cf-emp" onchange="renderChoferes()"><option value="">Todas las empresas</option><option>Tenlog</option><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select>
       <select id="cf-act" onchange="renderChoferes()"><option value="">Activos e inactivos</option><option value="1">Solo activos</option><option value="0">Solo inactivos</option></select>
     </div>
     <button class="btn btn-primary btn-sm" onclick="abrirFormChofer()">+ Agregar chofer</button>
@@ -753,7 +754,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
       <div class="field"><label>Patente *</label>
         <input type="text" id="fm-patente" style="text-transform:uppercase"></div>
       <div class="field"><label>Empresa</label>
-        <select id="fm-empresa"><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select></div>
+        <select id="fm-empresa"><option>Tenlog</option><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select></div>
       <div class="field"><label>Marca</label><input type="text" id="fm-marca" placeholder="ej: Scania"></div>
       <div class="field"><label>Modelo</label><input type="text" id="fm-modelo" placeholder="ej: R450"></div>
       <div class="field"><label>Año</label><input type="number" id="fm-año" placeholder="ej: 2020"></div>
@@ -785,7 +786,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
       <div class="field"><label>DNI</label><input type="text" id="cm-dni" placeholder="ej: 30.123.456"></div>
       <div class="field"><label>Teléfono</label><input type="text" id="cm-tel" placeholder="ej: 11-1234-5678"></div>
       <div class="field"><label>Empresa</label>
-        <select id="cm-empresa"><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select></div>
+        <select id="cm-empresa"><option>Tenlog</option><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select></div>
       <div class="field"><label>Vto. Licencia</label><input type="date" id="cm-lic"></div>
       <div class="field"><label>Vto. ART</label><input type="date" id="cm-art"></div>
       <div class="field"><label>Vto. Psicofísico</label><input type="date" id="cm-psico"></div>

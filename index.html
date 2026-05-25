@@ -206,6 +206,12 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
   <div class="logo"><div class="logo-dot"></div> FleetTrack · Control de Tráfico</div>
   <div class="header-right">
     <span id="header-date"></span>
+    <select id="empresa-sel" onchange="cambiarEmpresa(this.value)"
+      style="border:0.5px solid var(--border);border-radius:var(--r);padding:4px 10px;font-size:12px;background:var(--bg);font-family:var(--font);cursor:pointer">
+      <option value="Barracas Semis">Barracas Semis</option>
+      <option value="Buenos Ayres">Buenos Ayres</option>
+      <option value="Noria">Noria</option>
+    </select>
     <span class="header-user" id="header-user"></span>
     <span class="admin-badge" id="admin-badge" style="display:none">ADMIN</span>
     <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
@@ -213,12 +219,53 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
 </header>
 <main class="main">
 <div class="tabs">
+  <button class="tab" onclick="go('dashboard')">Dashboard</button>
   <button class="tab active" onclick="go('viaje')">Nuevo viaje</button>
   <button class="tab" onclick="go('historial')">Historial <span class="tab-badge" id="badge-pend" style="display:none">0</span></button>
   <button class="tab" onclick="go('novedades')">Novedades</button>
+  <button class="tab" onclick="go('flota')">Flota <span class="tab-badge" id="badge-flota" style="display:none">!</span></button>
+  <button class="tab" onclick="go('choferes')">Choferes <span class="tab-badge" id="badge-chof" style="display:none">!</span></button>
   <button class="tab" onclick="go('liquidacion')">Liquidación</button>
   <button class="tab" onclick="go('pointer')">Pointer / KM</button>
   <button class="tab" onclick="go('tarifas')">Tarifas</button>
+</div>
+
+<!-- ═══ DASHBOARD ════════════════════════════════════════════════════════ -->
+<div id="panel-dashboard" class="panel">
+  <div id="dash-loading" class="loading"><span class="spinner"></span>Cargando dashboard...</div>
+  <div id="dash-content" style="display:none">
+
+    <!-- Stats del mes -->
+    <div class="sec-title" style="margin-bottom:12px">Resumen del mes</div>
+    <div class="stats c5" style="margin-bottom:1.5rem">
+      <div class="stat"><div class="stat-val" id="d-viajes">—</div><div class="stat-lbl">Viajes</div></div>
+      <div class="stat"><div class="stat-val" id="d-km">—</div><div class="stat-lbl">Km recorridos</div></div>
+      <div class="stat"><div class="stat-val sv-blue" id="d-ing">—</div><div class="stat-lbl">Ingresos</div></div>
+      <div class="stat"><div class="stat-val sv-red" id="d-cost">—</div><div class="stat-lbl">Costo fleteros</div></div>
+      <div class="stat"><div class="stat-val sv-green" id="d-margen">—</div><div class="stat-lbl">Margen</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+
+      <!-- Top clientes -->
+      <div style="border:0.5px solid var(--border);border-radius:var(--rl);padding:1.25rem">
+        <div class="sec-title" style="margin-bottom:12px">Top clientes del mes</div>
+        <div id="d-top-clientes"><div class="empty" style="padding:1rem">Sin datos</div></div>
+      </div>
+
+      <!-- Viajes por estado -->
+      <div style="border:0.5px solid var(--border);border-radius:var(--rl);padding:1.25rem">
+        <div class="sec-title" style="margin-bottom:12px">Viajes por estado</div>
+        <div id="d-estados"><div class="empty" style="padding:1rem">Sin datos</div></div>
+      </div>
+    </div>
+
+    <!-- Alertas documentales -->
+    <div id="d-alertas-wrap">
+      <div class="sec-title" style="margin-bottom:12px">⚠ Alertas documentales (próximos 30 días)</div>
+      <div id="d-alertas"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ═══ NUEVO VIAJE ══════════════════════════════════════════════════════ -->
@@ -228,29 +275,17 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
 <div class="form-sec">
   <div class="sec-title">Datos del remito</div>
   <div class="fg g3">
-    <div class="field"><label>N° de Remito *</label>
-      <input type="text" id="v-remito" placeholder="ej: 1102R00001"></div>
+    <div class="field"><label>N° Remito / OC *</label>
+      <input type="text" id="v-remito" id="v-oc" placeholder="ej: 1102R00001 o N° OC"
+        oninput="onOCInput()" onblur="lookupProforma()"></div>
+    <div id="proforma-result" style="display:none"></div>
     <div class="field"><label>Fecha del viaje *</label>
       <input type="date" id="v-fecha" onchange="onFechaChange()"></div>
     <div class="field"><label>Tipo de carga</label>
       <select id="v-carga">
         <option value="">— Seleccionar —</option>
-        <option>General</option><option>Refrigerada</option><option>Peligrosa</option>
-        <option>Pallets</option><option>Granel</option><option>Contenedor</option><option>Maquinaria</option>
+        <option>General</option><option>Peligrosa</option><option>Pallets</option>
       </select></div>
-  </div>
-</div>
-
-<!-- OC: solo Softys y Kimberly -->
-<div class="form-sec" id="oc-sec" style="display:none">
-  <div class="sec-title">Orden de compra (OC)</div>
-  <div class="fg">
-    <div class="field">
-      <label>Número de OC</label>
-      <input type="text" id="v-oc" placeholder="ej: 60430041" autocomplete="off"
-        oninput="onOCInput()" onblur="lookupProforma()">
-    </div>
-    <div id="proforma-result" style="display:none;align-items:center"></div>
   </div>
 </div>
 
@@ -309,9 +344,9 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
 
 <!-- Clientes visitados -->
 <div class="form-sec">
-  <div class="sec-title">Clientes visitados en este viaje</div>
+  <div class="sec-title">Controles de descarga</div>
   <div class="fg">
-    <div class="field"><label>Cantidad de clientes</label>
+    <div class="field"><label>Controles de descarga</label>
       <select id="v-cant-cli" onchange="renderClientesVisitados()">
         <option value="0">— Seleccionar —</option>
         <option value="1">1</option><option value="2">2</option><option value="3">3</option>
@@ -363,11 +398,19 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
         <button class="sino-btn no active" data-field="permanencia" onclick="setSino(this,'No')">No</button>
       </div>
     </div>
+    <div class="sino-extra" id="extra-permanencia">
+      <div class="fg">
+        <div class="field"><label>N° Evento Permanencia</label>
+          <input type="text" id="v-nPermanencia" placeholder="Número de evento"></div>
+        <div class="field"><label>Cantidad (horas/días)</label>
+          <input type="number" id="v-cantPermanencia" placeholder="ej: 2" min="0" step="0.5"></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- Retorno -->
-<div class="form-sec">
+<div class="form-sec" id="retorno-sec" style="display:none">
   <div class="sec-title">Retorno</div>
   <div class="section-box">
     <div class="sino-row" style="border:none;padding:0"><span class="sino-lbl">¿Tiene retorno?</span>
@@ -450,8 +493,17 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th>Fecha</th><th>Remito</th><th>Cliente</th><th>Tipo</th><th>Ruta</th>
-          <th>Tractor</th><th>Km</th><th>Checkpoints</th><th>Ingreso</th><th>Margen</th><th>Acciones</th>
+          <th onclick="sortHist('fecha')" style="cursor:pointer">Fecha ↕</th>
+          <th>Remito/OC</th>
+          <th onclick="sortHist('cliente')" style="cursor:pointer">Cliente ↕</th>
+          <th>Tipo</th>
+          <th onclick="sortHist('origen')" style="cursor:pointer">Ruta ↕</th>
+          <th>Tractor</th>
+          <th onclick="sortHist('km')" style="cursor:pointer">Km ↕</th>
+          <th>Checkpoints</th>
+          <th onclick="sortHist('valor')" style="cursor:pointer">Ingreso ↕</th>
+          <th onclick="sortHist('margen')" style="cursor:pointer">Margen ↕</th>
+          <th>Acciones</th>
         </tr></thead>
         <tbody id="hist-body"></tbody>
       </table>
@@ -481,7 +533,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
           <select id="n-tipo">
             <option value="">— Seleccionar —</option>
             <option>Ausencia</option><option>ART</option><option>Franco</option>
-            <option>Licencia</option><option>Vacaciones</option><option>Otro</option>
+            <option>Licencia con goce</option><option>Licencia sin goce</option><option>Vacaciones</option><option>Otro</option>
           </select></div>
         <div class="field"><label>Detalle</label>
           <textarea id="n-detalle" placeholder="Descripción adicional..." rows="3"></textarea></div>
@@ -498,10 +550,63 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
         <select id="nf-tipo" onchange="renderNovedades()" style="flex:1">
           <option value="">Todos los tipos</option>
           <option>Ausencia</option><option>ART</option><option>Franco</option>
-          <option>Licencia</option><option>Vacaciones</option><option>Otro</option>
+          <option>Licencia con goce</option><option>Licencia sin goce</option><option>Vacaciones</option><option>Otro</option>
         </select>
       </div>
       <div id="nov-list"><div class="loading"><span class="spinner"></span>Cargando...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FLOTA ════════════════════════════════════════════════════════════ -->
+<div id="panel-flota" class="panel">
+  <div id="alert-flota"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <div>
+      <div class="filters" style="margin:0">
+        <select id="ff-tipo" onchange="renderFlota()"><option value="">Todos</option><option>Tractor</option><option>Acoplado/Semi</option></select>
+        <select id="ff-emp" onchange="renderFlota()"><option value="">Todas las empresas</option><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select>
+        <select id="ff-act" onchange="renderFlota()"><option value="">Activos e inactivos</option><option value="1">Solo activos</option><option value="0">Solo inactivos</option></select>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="abrirFormFlota()">+ Agregar unidad</button>
+  </div>
+  <div id="flota-state" class="loading"><span class="spinner"></span>Cargando flota...</div>
+  <div id="flota-table" style="display:none">
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Tipo</th><th>Patente</th><th>Marca / Modelo</th><th>Empresa</th>
+          <th>RUTA</th><th>RTO</th><th>VTV</th><th>Seguro</th><th>Habilitación</th>
+          <th>Estado</th><th></th>
+        </tr></thead>
+        <tbody id="flota-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHOFERES ══════════════════════════════════════════════════════════ -->
+<div id="panel-choferes" class="panel">
+  <div id="alert-choferes"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <div class="filters" style="margin:0">
+      <select id="cf-emp" onchange="renderChoferes()"><option value="">Todas las empresas</option><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select>
+      <select id="cf-act" onchange="renderChoferes()"><option value="">Activos e inactivos</option><option value="1">Solo activos</option><option value="0">Solo inactivos</option></select>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="abrirFormChofer()">+ Agregar chofer</button>
+  </div>
+  <div id="choferes-state" class="loading"><span class="spinner"></span>Cargando choferes...</div>
+  <div id="choferes-table" style="display:none">
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Nombre</th><th>DNI</th><th>Teléfono</th><th>Empresa</th>
+          <th>Licencia</th><th>ART</th><th>Psicofísico</th><th>LINTI</th>
+          <th>Estado</th><th></th>
+        </tr></thead>
+        <tbody id="choferes-body"></tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -637,6 +742,67 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg2)}
   </div>
 </div>
 
+<!-- MODAL FLOTA -->
+<div class="modal-bg" id="flota-modal">
+  <div class="modal" style="max-width:600px">
+    <div class="modal-title" id="flota-modal-title">Agregar unidad</div>
+    <input type="hidden" id="fm-id">
+    <div class="fg g3" style="gap:10px;margin-bottom:1rem">
+      <div class="field"><label>Tipo *</label>
+        <select id="fm-tipo"><option>Tractor</option><option>Acoplado/Semi</option></select></div>
+      <div class="field"><label>Patente *</label>
+        <input type="text" id="fm-patente" style="text-transform:uppercase"></div>
+      <div class="field"><label>Empresa</label>
+        <select id="fm-empresa"><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select></div>
+      <div class="field"><label>Marca</label><input type="text" id="fm-marca" placeholder="ej: Scania"></div>
+      <div class="field"><label>Modelo</label><input type="text" id="fm-modelo" placeholder="ej: R450"></div>
+      <div class="field"><label>Año</label><input type="number" id="fm-año" placeholder="ej: 2020"></div>
+      <div class="field"><label>Vto. RUTA</label><input type="date" id="fm-ruta"></div>
+      <div class="field"><label>Vto. RTO</label><input type="date" id="fm-rto"></div>
+      <div class="field"><label>Vto. VTV</label><input type="date" id="fm-vtv"></div>
+      <div class="field"><label>Vto. Seguro</label><input type="date" id="fm-seguro"></div>
+      <div class="field"><label>Vto. Habilitación</label><input type="date" id="fm-hab"></div>
+      <div class="field"><label>Activo</label>
+        <select id="fm-activo"><option value="true">Sí</option><option value="false">No</option></select></div>
+      <div class="field full"><label>Observaciones</label>
+        <input type="text" id="fm-obs" placeholder="Notas adicionales"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="guardarFlota()">Guardar</button>
+      <button class="btn" onclick="g('flota-modal').classList.remove('open')">Cancelar</button>
+      <span class="saving-msg" id="fm-saving"><span class="spinner"></span></span>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CHOFER -->
+<div class="modal-bg" id="chofer-modal">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-title" id="chofer-modal-title">Agregar chofer</div>
+    <input type="hidden" id="cm-id">
+    <div class="fg" style="gap:10px;margin-bottom:1rem">
+      <div class="field"><label>Nombre completo *</label><input type="text" id="cm-nombre"></div>
+      <div class="field"><label>DNI</label><input type="text" id="cm-dni" placeholder="ej: 30.123.456"></div>
+      <div class="field"><label>Teléfono</label><input type="text" id="cm-tel" placeholder="ej: 11-1234-5678"></div>
+      <div class="field"><label>Empresa</label>
+        <select id="cm-empresa"><option>Barracas Semis</option><option>Buenos Ayres</option><option>Noria</option></select></div>
+      <div class="field"><label>Vto. Licencia</label><input type="date" id="cm-lic"></div>
+      <div class="field"><label>Vto. ART</label><input type="date" id="cm-art"></div>
+      <div class="field"><label>Vto. Psicofísico</label><input type="date" id="cm-psico"></div>
+      <div class="field"><label>Vto. LINTI</label><input type="date" id="cm-linti"></div>
+      <div class="field"><label>Activo</label>
+        <select id="cm-activo"><option value="true">Sí</option><option value="false">No</option></select></div>
+      <div class="field full"><label>Observaciones</label>
+        <input type="text" id="cm-obs" placeholder="Notas adicionales"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="guardarChofer()">Guardar</button>
+      <button class="btn" onclick="g('chofer-modal').classList.remove('open')">Cancelar</button>
+      <span class="saving-msg" id="cm-saving"><span class="spinner"></span></span>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL CHECKPOINTS -->
 <div class="modal-bg" id="chk-modal">
   <div class="modal">
@@ -759,6 +925,10 @@ function showApp(){
   g('login-wrap').style.display='none';g('app-wrap').style.display='block';
   g('header-user').textContent=session.nombre||session.username;
   if(session.esAdmin){g('admin-badge').style.display='inline-block';}
+  // Set empresa
+  const empSel=g('empresa-sel');
+  if(empSel&&session.empresa){ empSel.value=session.empresa; }
+  session.empresaActual=session.empresa||'Barracas Semis';
   g('header-date').textContent=new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
   if(!g('v-fecha').value)g('v-fecha').value=today();
   if(!g('n-fecha').value)g('n-fecha').value=today();
@@ -771,13 +941,16 @@ function showApp(){
 //  TABS
 // ════════════════════════════════════════════════════════════════════════════
 function go(tab){
-  ['viaje','historial','novedades','liquidacion','pointer','tarifas'].forEach((t,i)=>{
+  ['dashboard','viaje','historial','novedades','flota','choferes','liquidacion','pointer','tarifas'].forEach((t,i)=>{
     document.querySelectorAll('.tab')[i].classList.toggle('active',t===tab);
     g(`panel-${t}`).classList.toggle('active',t===tab);
   });
+  if(tab==='dashboard')loadDashboard();
   if(tab==='historial'&&!viajesLoaded)loadViajes();
   if(tab==='liquidacion'&&!viajesLoaded)loadViajes();
   if(tab==='novedades'){loadNovedades();if(!g('nf-mes').value)g('nf-mes').value=todayMonth();}
+  if(tab==='flota'&&!flotaLoaded)loadFlota();
+  if(tab==='choferes'&&!choferesLoaded)loadChoferes();
   if(tab==='pointer')loadPointerData();
   if(tab==='tarifas')actualizarDiasIncremento();
 }
@@ -813,10 +986,10 @@ function onClienteChange(){
   else incAlert.style.display='none';
   g('fletero-sec').style.display=FLETERO_CLIENTS.includes(cli)?'block':'none';
   g('v-fletero').value='';g('v-ori').value='';g('v-dst').value='';
-  // OC solo para Softys y Kimberly
-  const ocClients=['Softys','Kimberly'];
-  g('oc-sec').style.display=ocClients.includes(cli)?'block':'none';
-  if(!ocClients.includes(cli)){ g('v-oc').value=''; g('proforma-result').style.display='none'; }
+  // Retorno solo para Softys y Kimberly
+  const retornoClients=['Softys','Kimberly'];
+  g('retorno-sec').style.display=retornoClients.includes(cli)?'block':'none';
+  if(!retornoClients.includes(cli)){ sinoState.retorno='No'; g('retorno-details').style.display='none'; }
   hideAc('ori');hideAc('dst');calcValor();
 }
 
@@ -843,8 +1016,18 @@ function renderClientesVisitados(){
   fields.innerHTML='';
   for(let i=1;i<=n;i++){
     const d=document.createElement('div');d.className='field';
-    d.innerHTML=`<label>Cliente ${i}</label><input type="text" id="vcli-${i}" placeholder="Nombre del cliente visitado">`;
+    d.innerHTML=`<label>Control ${i}</label><input type="text" id="vcli-${i}" placeholder="Nombre del cliente / punto de descarga">`;
     fields.appendChild(d);
+  }
+  // Alerta Kimberly >3 controles
+  const cli=g('v-cli').value;
+  const alertId='kcc-alert';
+  let alertEl=g(alertId);
+  if(!alertEl){ alertEl=document.createElement('div'); alertEl.id=alertId; wrap.parentNode.insertBefore(alertEl,wrap.nextSibling); }
+  if(cli==='Kimberly'&&n>3){
+    alertEl.innerHTML='<div class="alert alert-warn">⚠ Kimberly: más de 3 controles de descarga. Recordá cobrar el adicional correspondiente.</div>';
+  } else {
+    alertEl.innerHTML='';
   }
 }
 
@@ -856,8 +1039,9 @@ function setSino(btn,val2){
   btn.closest('.sino-btns').querySelectorAll('.sino-btn').forEach(b=>{
     b.classList.toggle('active',b===btn);
   });
-  if(field==='peonada') g('extra-peonada').style.display=val2==='Si'?'block':'none';
-  if(field==='retorno') g('retorno-details').style.display=val2==='Si'?'block':'none';
+  if(field==='peonada')     g('extra-peonada').style.display=val2==='Si'?'block':'none';
+  if(field==='permanencia')  g('extra-permanencia').style.display=val2==='Si'?'block':'none';
+  if(field==='retorno')      g('retorno-details').style.display=val2==='Si'?'block':'none';
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -1163,10 +1347,14 @@ async function guardarViaje(){
     retornoDesde:sinoState.retorno==='Si'?g('v-retDesde').value.trim():'',
     retornoCliente:sinoState.retorno==='Si'?g('v-retCli').value:'',
     peonada:sinoState.peonada,nEventoPeonada:sinoState.peonada==='Si'?g('v-nPeonada').value.trim():'',
-    armeDes:sinoState.armeDes,laterales:sinoState.laterales,viajeInterno:sinoState.viajeInterno,permanencia:sinoState.permanencia,
+    armeDes:sinoState.armeDes,laterales:sinoState.laterales,viajeInterno:sinoState.viajeInterno,
+    permanencia:sinoState.permanencia,
+    nEventoPermanencia:(g('v-nPermanencia')&&g('v-nPermanencia').value.trim())||'',
+    cantPermanencia:+(g('v-cantPermanencia')&&g('v-cantPermanencia').value)||0,
     cantClientes:cantCli,clientesVisitados:clientesVisitados.join(' | '),
     observaciones:g('v-obs').value.trim(),
-    oc:(g('v-oc')&&g('v-oc').value.trim())||'',
+    empresa:session?.empresaActual||'Barracas Semis',
+    oc:(g('v-remito')&&g('v-remito').value.trim())||'',
     valorProforma:+(g('btn-guardar').dataset.valorProforma||0),
     desvioProforma:(+(g('btn-guardar').dataset.total||0))-(+(g('btn-guardar').dataset.valorProforma||0)),
     usuario:session?.nombre||session?.username||'',
@@ -1225,6 +1413,14 @@ async function loadViajes(force=false, mesFiltro=''){
     poblarFiltros();actualizarBadge();renderHist();
   }catch(e){g('hist-state').innerHTML=`Error: ${e.message}`;}
 }
+let sortField='fecha', sortDir=-1; // default: fecha desc
+
+function sortHist(field){
+  if(sortField===field){ sortDir*=-1; }
+  else { sortField=field; sortDir=-1; }
+  renderHist();
+}
+
 function onMesFiltroChange(){
   const mes=g('hf-mes').value;
   if(mes) loadViajes(true, mes);
@@ -1255,6 +1451,13 @@ function renderHist(){
   const total=filtered.reduce((s,v)=>s+(+val(v,'valor','Valor')||0),0);
   const cost=filtered.reduce((s,v)=>s+(+val(v,'tarifaFletero','TarifaFletero')||0),0);
   const margen=filtered.reduce((s,v)=>s+(+val(v,'margen','Margen')||0),0);
+  // Sort
+  filtered.sort((a,b)=>{
+    let va=val(a,sortField,sortField.charAt(0).toUpperCase()+sortField.slice(1))||'';
+    let vb=val(b,sortField,sortField.charAt(0).toUpperCase()+sortField.slice(1))||'';
+    if(!isNaN(+va)&&!isNaN(+vb)){ va=+va; vb=+vb; }
+    if(va<vb) return -sortDir; if(va>vb) return sortDir; return 0;
+  });
   g('hs-n').textContent=filtered.length;g('hs-fac').textContent=filtered.length?fmt(total):'—';
   g('hs-cost').textContent=filtered.length&&cost>0?fmt(cost):'—';g('hs-margen').textContent=filtered.length?fmt(margen):'—';
   g('hist-state').style.display='none';
@@ -1274,6 +1477,8 @@ function renderHist(){
       {k:'ChkPendienteDevolucion',lbl:'Dev.'},
       {k:'ChkRendidoDigital',lbl:'Digital'},
       {k:'ChkRendidoFisico',lbl:'Físico'},
+      {k:'ChkLiquidado',lbl:'Liquidado'},
+      {k:'ChkCobrado',lbl:'Cobrado'},
     ];
     const chkHtml=chks.map(c=>{
       const done=val(v,c.k,c.k)===true||val(v,c.k,c.k)==='TRUE'||val(v,c.k,c.k)===1;
@@ -1288,12 +1493,12 @@ function renderHist(){
       <td style="white-space:nowrap;font-size:12px">${val(v,'origen','Origen')} → ${val(v,'destino','Destino')}</td>
       <td class="mono">${val(v,'patente','Patente')||'—'}</td>
       <td class="mono">${Math.round(+val(v,'km','Km')||0)}</td>
-      <td><div style="display:flex;flex-wrap:wrap;gap:2px;cursor:pointer" class="chk-click" data-id="${id}" data-ct="${val(v,'ChkTransito')}" data-ci="${val(v,'FechaInicioTransito')}" data-cf="${val(v,'FechaFinTransito')}" data-cc="${val(v,'ChkRendidoChofer')}" data-cd="${val(v,'ChkPendienteDevolucion')}" data-cdi="${val(v,'ChkRendidoDigital')}" data-cfi="${val(v,'ChkRendidoFisico')}" data-rem="${val(v,'remito','Remito')}">
+      <td><div style="display:flex;flex-wrap:wrap;gap:2px;cursor:pointer" class="chk-click" data-id="${id}" data-ct="${val(v,'ChkTransito')}" data-ci="${val(v,'FechaInicioTransito')}" data-cf="${val(v,'FechaFinTransito')}" data-cc="${val(v,'ChkRendidoChofer')}" data-cd="${val(v,'ChkPendienteDevolucion')}" data-cdi="${val(v,'ChkRendidoDigital')}" data-cfi="${val(v,'ChkRendidoFisico')}" data-cl="${val(v,'ChkLiquidado')}" data-cco="${val(v,'ChkCobrado')}" data-rem="${val(v,'remito','Remito')}">
         ${chkHtml}
       </div></td>
       <td class="mono">${(+val(v,'valor','Valor')||0)===0?'<span class="badge b-amber" style="font-size:12px" title="Sin tarifa cargada">⚠ Sin tarifa</span>':fmt(val(v,'valor','Valor'))}</td>
       <td class="mono" style="color:${mg>=0?'var(--green-text)':'var(--red-text)'}">${fmt(mg)}</td>
-      <td>${adminActions}</td>
+      <td style='white-space:nowrap'>${trackBtn}${adminActions}</td>
     </tr>`;
   }).join('');
 }
@@ -1310,6 +1515,8 @@ function abrirCheckpoints(id,data){
     {key:'ChkPendienteDevolucion',lbl:'Pendiente con devolución'},
     {key:'ChkRendidoDigital',lbl:'Rendido digital'},
     {key:'ChkRendidoFisico',lbl:'Rendido físico'},
+    {key:'ChkLiquidado',lbl:'Liquidado'},
+    {key:'ChkCobrado',lbl:'Cobrado'},
   ];
   g('chk-content').innerHTML=items.map(item=>{
     const done=isTrue(data[item.key]);
@@ -1345,7 +1552,7 @@ function toggleChk(box,key){
 async function guardarCheckpoints(){
   if(!chkEditingId)return;
   const boxes=g('chk-content').querySelectorAll('.chk-box');
-  const keys=['ChkTransito','ChkRendidoChofer','ChkPendienteDevolucion','ChkRendidoDigital','ChkRendidoFisico'];
+  const keys=['ChkTransito','ChkRendidoChofer','ChkPendienteDevolucion','ChkRendidoDigital','ChkRendidoFisico','ChkLiquidado','ChkCobrado'];
   const data={id:chkEditingId};
   keys.forEach((k,i)=>{data[k.charAt(0).toLowerCase()+k.slice(1)]=boxes[i]?boxes[i].classList.contains('checked'):false;});
   data.fechaInicioTransito=g('chk-ini')?g('chk-ini').value:'';
@@ -1572,6 +1779,249 @@ function exportLiq(fle,mes){
 // ════════════════════════════════════════════════════════════════════════════
 //  ALERTS & INIT
 // ════════════════════════════════════════════════════════════════════════════
+function copyTrack(id){
+  const url=`${location.origin}${location.pathname}?track=${id}`;
+  navigator.clipboard.writeText(url).then(()=>showAlert('alert-viaje','ok','✓ Link de seguimiento copiado al portapapeles.'));
+}
+function cambiarEmpresa(emp){
+  if(!session) return;
+  session.empresaActual=emp;
+  // Re-save session with new empresa
+  const stored=JSON.parse(localStorage.getItem('ft_session')||'{}');
+  stored.empresaActual=emp;
+  localStorage.setItem('ft_session',JSON.stringify(stored));
+  // Reload viajes for this empresa (future: filter by empresa)
+  viajesLoaded=false;
+  showAlert('alert-viaje','ok',`Empresa cambiada a: ${emp}`);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  DASHBOARD
+// ════════════════════════════════════════════════════════════════════════════
+async function loadDashboard(){
+  g('dash-loading').style.display='block';g('dash-content').style.display='none';
+  try{
+    const d=await apiCall({action:'getDashboard'});
+    g('d-viajes').textContent=d.totalViajes||0;
+    g('d-km').textContent=(d.totalKm||0).toLocaleString('es-AR')+' km';
+    g('d-ing').textContent=fmt(d.totalIngresos||0);
+    g('d-cost').textContent=d.totalCosto>0?fmt(d.totalCosto):'—';
+    g('d-margen').textContent=fmt(d.totalMargen||0);
+
+    // Top clientes
+    g('d-top-clientes').innerHTML=(d.topClientes||[]).length?
+      (d.topClientes||[]).map((c,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:12px;color:var(--text2);width:16px">${i+1}</span>
+        <span class="badge b-blue">${c.cliente}</span>
+        <div style="flex:1;background:var(--bg3);border-radius:4px;height:6px;overflow:hidden">
+          <div style="background:var(--blue);height:6px;border-radius:4px;width:${Math.round(c.valor/(d.topClientes[0].valor||1)*100)}%"></div>
+        </div>
+        <span style="font-size:12px;font-family:var(--mono)">${fmt(c.valor)}</span>
+      </div>`).join('')
+      :'<div class="empty" style="padding:1rem">Sin viajes este mes</div>';
+
+    // Estados
+    const estadoColors={'En tránsito':'b-amber','Rendido físico':'b-teal','Facturado':'b-blue','Liquidado':'b-purple','Cobrado':'b-green'};
+    g('d-estados').innerHTML=Object.entries(d.estados||{}).length?
+      Object.entries(d.estados||{}).map(([e,n])=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span class="badge ${estadoColors[e]||'b-gray'}">${e}</span>
+        <span style="font-family:var(--mono);font-size:13px;font-weight:500">${n}</span>
+      </div>`).join('')
+      :'<div class="empty" style="padding:1rem">Sin viajes</div>';
+
+    // Alertas
+    const alertas=d.alertas||[];
+    const badgeFlota=g('badge-flota'),badgeChof=g('badge-chof');
+    const flotaAlerts=alertas.filter(a=>a.tipo==='flota');
+    const chofAlerts=alertas.filter(a=>a.tipo==='chofer');
+    if(badgeFlota) badgeFlota.style.display=flotaAlerts.length?'inline-block':'none';
+    if(badgeChof)  badgeChof.style.display=chofAlerts.length?'inline-block':'none';
+
+    g('d-alertas').innerHTML=alertas.length?alertas.map(a=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--r);margin-bottom:6px;background:${a.vencido?'var(--red-bg)':'var(--amber-bg)'}">
+        <span style="font-size:16px">${a.vencido?'🔴':'🟡'}</span>
+        <span class="badge ${a.tipo==='flota'?'b-blue':'b-purple'}">${a.tipo==='flota'?'Unidad':'Chofer'}</span>
+        <span style="font-weight:500;font-size:13px">${a.entidad}</span>
+        <span style="font-size:12px;color:var(--text2)">${a.doc}</span>
+        <span style="font-family:var(--mono);font-size:12px;margin-left:auto;color:${a.vencido?'var(--red-text)':'var(--amber-text)'}">${a.vencido?'Vencido el':'Vence el'} ${fmtDate(a.vto)}</span>
+      </div>`).join('')
+      :'<div style="padding:10px 12px;border-radius:var(--r);background:var(--teal-bg);color:var(--teal-text);font-size:13px">✓ Sin alertas documentales en los próximos 30 días</div>';
+
+    g('dash-loading').style.display='none';g('dash-content').style.display='block';
+  }catch(e){g('dash-loading').innerHTML=`Error: ${e.message}`;}
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  FLOTA
+// ════════════════════════════════════════════════════════════════════════════
+let flota=[], flotaLoaded=false;
+
+async function loadFlota(){
+  g('flota-state').style.display='block';g('flota-table').style.display='none';
+  try{
+    const data=await apiCall({action:'getFlota'});
+    flota=Array.isArray(data)?data:[];flotaLoaded=true;renderFlota();
+  }catch(e){g('flota-state').innerHTML=`Error: ${e.message}`;}
+}
+
+function vtoCell(fecha){
+  if(!fecha||fecha==='false'||fecha==='') return '<span style="color:var(--text3);font-size:12px">—</span>';
+  const d=daysTo(fecha);
+  const color=d<0?'var(--red-text)':d<=30?'var(--amber)':'var(--teal)';
+  const label=d<0?'Vencido':d===0?'Hoy':`${d}d`;
+  return `<span style="font-family:var(--mono);font-size:11px;color:${color}" title="${fmtDate(fecha)}">${fmtDate(fecha)}<br><small>${label}</small></span>`;
+}
+
+function renderFlota(){
+  const ft=g('ff-tipo').value,fe=g('ff-emp').value,fa=g('ff-act').value;
+  const filtered=flota.filter(f=>{
+    if(ft&&val(f,'Tipo')!==ft) return false;
+    if(fe&&val(f,'Empresa')!==fe) return false;
+    if(fa==='1'&&!f.Activo) return false;
+    if(fa==='0'&&f.Activo) return false;
+    return true;
+  });
+  g('flota-state').style.display='none';
+  if(!filtered.length){g('flota-table').style.display='none';return;}
+  g('flota-table').style.display='block';
+  g('flota-body').innerHTML=filtered.map(f=>`<tr>
+    <td><span class="badge ${val(f,'Tipo')==='Tractor'?'b-blue':'b-gray'}">${val(f,'Tipo')}</span></td>
+    <td style="font-weight:500">${val(f,'Patente')}</td>
+    <td style="font-size:12px">${val(f,'Marca')||'—'} ${val(f,'Modelo')||''}</td>
+    <td><span class="badge b-gray" style="font-size:10px">${val(f,'Empresa')||'—'}</span></td>
+    <td>${vtoCell(val(f,'VtoRUTA'))}</td>
+    <td>${vtoCell(val(f,'VtoRTO'))}</td>
+    <td>${vtoCell(val(f,'VtoVTV'))}</td>
+    <td>${vtoCell(val(f,'VtoSeguro'))}</td>
+    <td>${vtoCell(val(f,'VtoHabilitacion'))}</td>
+    <td><span class="badge ${f.Activo?'b-teal':'b-red'}">${f.Activo?'Activo':'Inactivo'}</span></td>
+    <td><button class="btn btn-sm" onclick='editarFlota(${JSON.stringify(f).replace(/'/g,"\'")})'  style="font-size:11px">✏</button></td>
+  </tr>`).join('');
+}
+
+function abrirFormFlota(data){
+  g('flota-modal-title').textContent=data?'Editar unidad':'Agregar unidad';
+  g('fm-id').value=data?val(data,'ID','id'):'';
+  ['tipo','patente','marca','modelo','año','ruta','rto','vtv','seguro','hab','obs'].forEach(f=>{
+    const el=g(`fm-${f}`); if(el) el.value='';
+  });
+  if(data){
+    g('fm-tipo').value=val(data,'Tipo')||'Tractor';
+    g('fm-patente').value=val(data,'Patente');
+    g('fm-marca').value=val(data,'Marca');
+    g('fm-modelo').value=val(data,'Modelo');
+    g('fm-año').value=val(data,'Año');
+    g('fm-ruta').value=val(data,'VtoRUTA');
+    g('fm-rto').value=val(data,'VtoRTO');
+    g('fm-vtv').value=val(data,'VtoVTV');
+    g('fm-seguro').value=val(data,'VtoSeguro');
+    g('fm-hab').value=val(data,'VtoHabilitacion');
+    g('fm-empresa').value=val(data,'Empresa')||'Barracas Semis';
+    g('fm-activo').value=data.Activo?'true':'false';
+    g('fm-obs').value=val(data,'Observaciones');
+  }
+  g('flota-modal').classList.add('open');
+}
+function editarFlota(data){ abrirFormFlota(data); }
+
+async function guardarFlota(){
+  const id=g('fm-id').value;
+  const payload={
+    id, tipo:g('fm-tipo').value, patente:g('fm-patente').value.toUpperCase().trim(),
+    marca:g('fm-marca').value, modelo:g('fm-modelo').value, año:g('fm-año').value,
+    vtoRUTA:g('fm-ruta').value, vtoRTO:g('fm-rto').value, vtoVTV:g('fm-vtv').value,
+    vtoSeguro:g('fm-seguro').value, vtoHabilitacion:g('fm-hab').value,
+    empresa:g('fm-empresa').value, activo:g('fm-activo').value==='true',
+    observaciones:g('fm-obs').value
+  };
+  if(!payload.patente){showAlert('alert-flota','err','La patente es obligatoria.');return;}
+  g('fm-saving').style.display='inline-flex';
+  try{
+    const action=id?'updateFlota':'addFlota';
+    const res=await apiCall({action,data:encodeURIComponent(JSON.stringify(payload))});
+    if(id){ const i=flota.findIndex(f=>val(f,'ID','id')===id); if(i>=0) flota[i]={...flota[i],...payload,Tipo:payload.tipo,Patente:payload.patente,Marca:payload.marca,Modelo:payload.modelo,VtoRUTA:payload.vtoRUTA,VtoRTO:payload.vtoRTO,VtoVTV:payload.vtoVTV,VtoSeguro:payload.vtoSeguro,VtoHabilitacion:payload.vtoHabilitacion,Empresa:payload.empresa,Activo:payload.activo}; }
+    else { payload.ID=res.id;payload.Activo=true;flota.unshift(payload); }
+    renderFlota();g('flota-modal').classList.remove('open');
+    showAlert('alert-flota','ok',`✓ Unidad ${id?'actualizada':'agregada'} correctamente.`);
+  }catch(e){showAlert('alert-flota','err',`Error: ${e.message}`);}
+  g('fm-saving').style.display='none';
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  CHOFERES
+// ════════════════════════════════════════════════════════════════════════════
+let choferes=[], choferesLoaded=false;
+
+async function loadChoferes(){
+  g('choferes-state').style.display='block';g('choferes-table').style.display='none';
+  try{
+    const data=await apiCall({action:'getChoferes'});
+    choferes=Array.isArray(data)?data:[];choferesLoaded=true;renderChoferes();
+  }catch(e){g('choferes-state').innerHTML=`Error: ${e.message}`;}
+}
+
+function renderChoferes(){
+  const fe=g('cf-emp').value,fa=g('cf-act').value;
+  const filtered=choferes.filter(c=>{
+    if(fe&&val(c,'Empresa')!==fe) return false;
+    if(fa==='1'&&!c.Activo) return false;
+    if(fa==='0'&&c.Activo) return false;
+    return true;
+  });
+  g('choferes-state').style.display='none';
+  if(!filtered.length){g('choferes-table').style.display='none';return;}
+  g('choferes-table').style.display='block';
+  g('choferes-body').innerHTML=filtered.map(c=>`<tr>
+    <td style="font-weight:500">${val(c,'Nombre')}</td>
+    <td class="mono">${val(c,'DNI')||'—'}</td>
+    <td class="mono">${val(c,'Telefono')||'—'}</td>
+    <td><span class="badge b-gray" style="font-size:10px">${val(c,'Empresa')||'—'}</span></td>
+    <td>${vtoCell(val(c,'VtoLicencia'))}</td>
+    <td>${vtoCell(val(c,'VtoART'))}</td>
+    <td>${vtoCell(val(c,'VtoPsicofisico'))}</td>
+    <td>${vtoCell(val(c,'VtoLINTI'))}</td>
+    <td><span class="badge ${c.Activo?'b-teal':'b-red'}">${c.Activo?'Activo':'Inactivo'}</span></td>
+    <td><button class="btn btn-sm" onclick='editarChofer(${JSON.stringify(c).replace(/'/g,"\'")})'  style="font-size:11px">✏</button></td>
+  </tr>`).join('');
+}
+
+function abrirFormChofer(data){
+  g('chofer-modal-title').textContent=data?'Editar chofer':'Agregar chofer';
+  g('cm-id').value=data?val(data,'ID','id'):'';
+  ['nombre','dni','tel','lic','art','psico','linti','obs'].forEach(f=>{const el=g(`cm-${f}`);if(el)el.value='';});
+  if(data){
+    g('cm-nombre').value=val(data,'Nombre');g('cm-dni').value=val(data,'DNI');
+    g('cm-tel').value=val(data,'Telefono');g('cm-lic').value=val(data,'VtoLicencia');
+    g('cm-art').value=val(data,'VtoART');g('cm-psico').value=val(data,'VtoPsicofisico');
+    g('cm-linti').value=val(data,'VtoLINTI');g('cm-empresa').value=val(data,'Empresa')||'Barracas Semis';
+    g('cm-activo').value=data.Activo?'true':'false';g('cm-obs').value=val(data,'Observaciones');
+  }
+  g('chofer-modal').classList.add('open');
+}
+function editarChofer(data){ abrirFormChofer(data); }
+
+async function guardarChofer(){
+  const id=g('cm-id').value;
+  const payload={
+    id,nombre:g('cm-nombre').value.trim(),dni:g('cm-dni').value.trim(),
+    telefono:g('cm-tel').value.trim(),vtoLicencia:g('cm-lic').value,
+    vtoART:g('cm-art').value,vtoPsicofisico:g('cm-psico').value,
+    vtoLINTI:g('cm-linti').value,empresa:g('cm-empresa').value,
+    activo:g('cm-activo').value==='true',observaciones:g('cm-obs').value
+  };
+  if(!payload.nombre){showAlert('alert-choferes','err','El nombre es obligatorio.');return;}
+  g('cm-saving').style.display='inline-flex';
+  try{
+    const action=id?'updateChofer':'addChofer';
+    const res=await apiCall({action,data:encodeURIComponent(JSON.stringify(payload))});
+    if(id){ const i=choferes.findIndex(c=>val(c,'ID','id')===id); if(i>=0) choferes[i]={...choferes[i],...payload,Nombre:payload.nombre,DNI:payload.dni,Telefono:payload.telefono,VtoLicencia:payload.vtoLicencia,VtoART:payload.vtoART,VtoPsicofisico:payload.vtoPsicofisico,VtoLINTI:payload.vtoLINTI,Empresa:payload.empresa,Activo:payload.activo}; }
+    else { payload.ID=res.id;payload.Activo=true;choferes.unshift(payload); }
+    renderChoferes();g('chofer-modal').classList.remove('open');
+    showAlert('alert-choferes','ok',`✓ Chofer ${id?'actualizado':'agregado'} correctamente.`);
+  }catch(e){showAlert('alert-choferes','err',`Error: ${e.message}`);}
+  g('cm-saving').style.display='none';
+}
+
 function showAlert(id,type,msg){
   const map={ok:'alert-ok',err:'alert-err',warn:'alert-warn'};
   g(id).innerHTML=`<div class="alert ${map[type]||'alert-warn'}">${msg}</div>`;
@@ -1579,7 +2029,7 @@ function showAlert(id,type,msg){
 }
 
 // Cerrar modales al hacer clic afuera
-['edit-modal','chk-modal'].forEach(id=>{
+['edit-modal','chk-modal','flota-modal','chofer-modal'].forEach(id=>{
   g(id).addEventListener('click',e=>{if(e.target===g(id))g(id).classList.remove('open');});
 });
 
@@ -1593,6 +2043,7 @@ document.addEventListener('click',e=>{
       ChkTransito:isTrue(d.ct),FechaInicioTransito:d.ci||'',FechaFinTransito:d.cf||'',
       ChkRendidoChofer:isTrue(d.cc),ChkPendienteDevolucion:isTrue(d.cd),
       ChkRendidoDigital:isTrue(d.cdi),ChkRendidoFisico:isTrue(d.cfi),
+      ChkLiquidado:isTrue(d.cl),ChkCobrado:isTrue(d.cco),
       remito:d.rem||''
     });
   }
